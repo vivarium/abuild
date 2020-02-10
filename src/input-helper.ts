@@ -46,9 +46,9 @@ export function getConf(): IAbuildConf {
 export function getPrivKey(): IKey {
   const key = ({} as unknown) as IKey;
 
-  key.name    = core.getInput('keyName');
+  key.name = core.getInput('keyName');
   key.content = core.getInput('privKey');
-  
+
   if (key.name.includes('/')) {
     throw new Error('Key name contains invalid character /');
   }
@@ -59,7 +59,7 @@ export function getPrivKey(): IKey {
 export function getPubKey(): IKey {
   const key = ({} as unknown) as IKey;
 
-  key.name    = core.getInput('keyName') + '.pub';
+  key.name = core.getInput('keyName') + '.pub';
   key.content = core.getInput('pubKey');
 
   if (key.name.includes('/')) {
@@ -72,12 +72,12 @@ export function getPubKey(): IKey {
 export function getPackages(basePath: string): IPackage[] {
   let packages: Array<IPackage> = [];
 
-  const buildFile = path.join(basePath, "build.json");//core.getInput('buildFile');
+  const buildFile = path.join(basePath, 'build.json'); //core.getInput('buildFile');
 
   core.debug(`Read packages from: ${buildFile}`);
 
-  let data = fs.readFileSync(buildFile, 'utf8')
-  
+  let data = fs.readFileSync(buildFile, 'utf8');
+
   const buildContent = JSON.parse(data);
   if (!isArray(buildContent)) {
     throw new Error('Build file content must be a JSON array');
@@ -90,12 +90,12 @@ export function getPackages(basePath: string): IPackage[] {
       _package.path.lastIndexOf('/') + 1,
       _package.path.length
     );
-    
+
     packages.push(_package);
   });
-  
+
   if (packages.length == 0) {
-    core.warning('Nothing to build.');  
+    core.warning('Nothing to build.');
   } else {
     core.debug(`Found ${packages.length} packages.`);
   }

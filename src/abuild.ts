@@ -8,7 +8,7 @@ export interface IPackage {
   name: string;
 }
 
-export async function build(alpinePackage: IPackage): Promise<void> {
+export async function build(alpinePackage: IPackage) {
   core.debug(`Build ${alpinePackage.name}`);
 
   process.chdir(alpinePackage.path);
