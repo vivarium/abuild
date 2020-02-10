@@ -1,6 +1,4 @@
 
-ARG VERSION
-
 FROM alpine:${VERSION}
 
 COPY . .
