@@ -1,4 +1,6 @@
 
+ARG VERSION=edge
+
 FROM alpine:${VERSION}
 
 COPY . .
@@ -6,7 +8,7 @@ COPY . .
 RUN apk update && \
     apk add alpine-sdk npm && \ 
     mv abuild.conf /etc && \
-    sudo addgroup root abuild && \
+    addgroup root abuild && \
     npm install --production
 
 ENTRYPOINT ["node", "/lib/main.js"]
