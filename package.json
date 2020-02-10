@@ -2,7 +2,7 @@
   "name": "alpine-abuild-action",
   "version": "0.0.0",
   "description": "Container template for building a Alpine repository",
-  "main": "lib/main.js",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write **/*.ts",

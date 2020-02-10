@@ -11,4 +11,4 @@ RUN apk update && \
     addgroup root abuild && \
     npm install --production
 
-ENTRYPOINT ["node", "/lib/main.js"]
+ENTRYPOINT ["node", "/dist/main.js"]
