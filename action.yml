@@ -1,10 +1,53 @@
-name: 'Container Action Template'
-description: 'Get started with Container actions'
-author: 'GitHub'
+name: 'Alpine abuild action'
+description: 'Build a custom Alpine repository'
+author: 'Luca Cantoreggi'
 inputs: 
-  myInput:
-    description: 'Input to use'
-    default: 'world'
+  cflags:
+    description: 'CFLAGS to use'
+    required: false
+    default: '-Os -fomit-frame-pointer'
+  cxxflags:
+    description: 'CXXFLAGS to use'
+    required: false
+    default: ${{ inputs.cflags }}
+  cppflags:
+    description: 'CPPFLAGS to use'
+    required: false
+    default: ${{ inputs.cflags }}
+  ldflags:
+    description: 'LDFLAGS to use'
+    required: false
+    default: '-Wl,--as-needed'
+  jobs:
+    description: 'How many jobs to use'
+    required: false
+    default: 2
+  packager:
+    description: 'Name and email address of the packager'
+    required: true
+  maintainer:
+    description: 'Name and email address of the maintainer'
+    required: false
+    default: ${{ inputs.packager }}
+  version:
+    description: 'The version of Alpine to use'
+    required: false
+    default: 'edge'
+  build:
+    description: 'The name of the build file'
+    required: false
+    default: 'build.json'
+  keyName:
+    description: 'The name of the used to sign the packages'
+    required: true
+  privKey:
+    description: 'The private key used to sign the packages'
+    required: true
+  pubKey:
+    description: 'The public key used to verify the packages'
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.version }}
