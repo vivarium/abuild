@@ -10,7 +10,7 @@ export interface IAbuildConf {
   jobs: number;
   packager: string;
   maintainer: string;
-  version: string;
+  prefix: string;
 }
 
 export function writeConf(conf: IAbuildConf, confPath: string) {
@@ -27,6 +27,7 @@ export function writeConf(conf: IAbuildConf, confPath: string) {
   data = data.replace('%JOBS%', conf.jobs.toString());
   data = data.replace('%PACKAGER%', conf.packager);
   data = data.replace('%MAINTAINER%', conf.maintainer);
+  data = data.replace('%PREFIX%', conf.prefix);
 
   fs.writeFileSync(confPath, data);
 }
@@ -45,4 +46,5 @@ function logConf(conf: IAbuildConf, confPath: string): void {
   core.debug(`Jobs:       ${conf.jobs}`);
   core.debug(`Packager:   ${conf.packager}`);
   core.debug(`Maintainer: ${conf.maintainer}`);
+  core.debug(`Prefix:     ${conf.prefix}`);
 }

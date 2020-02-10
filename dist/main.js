@@ -43,8 +43,8 @@ function run() {
             for (let i = 0; i < packages.length; i++) {
                 yield abuild.build(packages[i]);
             }
-            const output = path.join(github.workspace, 'packages', conf.version);
-            core.setOutput('repoDir', output);
+            const output = path.join(github.workspace, 'packages', conf.prefix);
+            core.setOutput('repository', output);
         }
         catch (error) {
             core.setFailed(error.message);

@@ -38,7 +38,7 @@ export function getConf(): IAbuildConf {
     conf.jobs = 1;
   }
 
-  conf.version = core.getInput('version');
+  conf.prefix = core.getInput('prefix');
 
   return conf;
 }

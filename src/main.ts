@@ -34,8 +34,8 @@ async function run() {
       await abuild.build(packages[i]);
     }
 
-    const output = path.join(github.workspace, 'packages', conf.version);
-    core.setOutput('repoDir', output);
+    const output = path.join(github.workspace, 'packages', conf.prefix);
+    core.setOutput('repository', output);
   } catch (error) {
     core.setFailed(error.message);
   }

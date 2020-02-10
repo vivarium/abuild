@@ -34,7 +34,7 @@ function getConf() {
         core.warning('Number of jobs is zero or less, defaulting to 1...');
         conf.jobs = 1;
     }
-    conf.version = core.getInput('version');
+    conf.prefix = core.getInput('prefix');
     return conf;
 }
 exports.getConf = getConf;
