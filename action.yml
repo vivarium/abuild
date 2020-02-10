@@ -49,5 +49,5 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.version }}
+  env:
+    VERSION : ${{ inputs.version }}
