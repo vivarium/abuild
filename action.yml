@@ -9,11 +9,11 @@ inputs:
   cxxflags:
     description: 'CXXFLAGS to use'
     required: false
-    default: ${{ inputs.cflags }}
+    default: -Os -fomit-frame-pointer
   cppflags:
     description: 'CPPFLAGS to use'
     required: false
-    default: ${{ inputs.cflags }}
+    default: -Os -fomit-frame-pointer
   ldflags:
     description: 'LDFLAGS to use'
     required: false
