@@ -28,7 +28,7 @@ inputs:
   maintainer:
     description: 'Name and email address of the maintainer'
     required: false
-    default: ${{ inputs.packager }}
+    default: ''
   version:
     description: 'The version of Alpine to use'
     required: false
