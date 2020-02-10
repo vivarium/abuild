@@ -24,7 +24,7 @@ function writePrivKeyConf(key, keyPath) {
     const confPath = path.join(keyPath, 'abuild.conf');
     keyPath = path.join(keyPath, key.name);
     if (!fs.existsSync(keyPath)) {
-        throw new Error('Private key missing');
+        throw new Error(`Private key at ${keyPath} missing`);
     }
     const confData = `PACKAGER_PRIVKEY="${keyPath}"`;
     fs.writeFileSync(confPath, confData);
