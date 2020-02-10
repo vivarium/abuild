@@ -13,11 +13,7 @@ export function writeKey(key: IKey, keyPath: string) {
 
   core.debug(`Write key to ${keyPath}`);
 
-  fs.writeFile(keyPath, key.content, error => {
-    if (error) {
-      throw error;
-    }
-  });
+  fs.writeFileSync(keyPath, key.content);
 }
 
 export function writePrivKeyConf(key: IKey, keyPath: string) {

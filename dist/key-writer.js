@@ -13,11 +13,7 @@ const core = __importStar(require("@actions/core"));
 function writeKey(key, keyPath) {
     keyPath = path.join(keyPath, key.name);
     core.debug(`Write key to ${keyPath}`);
-    fs.writeFile(keyPath, key.content, error => {
-        if (error) {
-            throw error;
-        }
-    });
+    fs.writeFileSync(keyPath, key.content);
 }
 exports.writeKey = writeKey;
 function writePrivKeyConf(key, keyPath) {

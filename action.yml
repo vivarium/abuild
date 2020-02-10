@@ -33,7 +33,7 @@ inputs:
     description: 'The version of Alpine to use'
     required: false
     default: 'edge'
-  build:
+  buildFile:
     description: 'The name of the build file'
     required: false
     default: 'build.json'
