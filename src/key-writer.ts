@@ -25,7 +25,7 @@ export function writePrivKeyConf(key: IKey, keyPath: string) {
   keyPath = path.join(keyPath, key.name);
 
   if (!fs.existsSync(keyPath)) {
-    throw new Error('Private key missing');
+    throw new Error(`Private ${keyPath} key missing`);
   }
 
   const confData = `PACKAGER_PRIVKEY="${keyPath}"`;
