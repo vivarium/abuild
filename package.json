@@ -1,7 +1,7 @@
 {
-  "name": "container-toolkit-template",
+  "name": "alpine-abuild-action",
   "version": "0.0.0",
-  "description": "Container template action using actions/toolkit",
+  "description": "Container template for building a Alpine repository",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -10,26 +10,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/container-toolkit-template.git"
+    "url": "git+https://github.com/vivarium/abuild.git"
   },
   "keywords": [
     "actions",
     "container",
-    "toolkit",
-    "setup"
+    "alpine",
+    "repository",
+    "abuild"
   ],
-  "author": "GitHub",
-  "license": "ISC",
+  "author": "Luca Cantoreggi",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/actions/container-toolkit-template/issues"
+    "url": "https://github.com/vivarium/abuild/issues"
   },
-  "homepage": "https://github.com/actions/container-toolkit-template#readme",
+  "homepage": "https://github.com/vivarium/abuild#readme",
   "dependencies": {
     "@actions/core": "^1.0.0",
     "@actions/io": "^1.0.0",
-    "@actions/exec": "^1.0.0",
-    "@actions/github": "^1.0.0",
-    "@actions/tool-cache": "^1.0.0"
+    "@actions/exec": "^1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.13",
