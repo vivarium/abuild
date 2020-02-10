@@ -60,7 +60,7 @@ function getPubKey() {
 exports.getPubKey = getPubKey;
 function getPackages(basePath) {
     let packages = [];
-    const buildFile = path.join(basePath, 'build.json'); //core.getInput('buildFile');
+    const buildFile = path.join(basePath, core.getInput('buildFile'));
     core.debug(`Read packages from: ${buildFile}`);
     let data = fs.readFileSync(buildFile, 'utf8');
     const buildContent = JSON.parse(data);
