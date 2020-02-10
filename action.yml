@@ -29,10 +29,6 @@ inputs:
     description: 'Name and email address of the maintainer'
     required: false
     default: ''
-  version:
-    description: 'The version of Alpine to use'
-    required: false
-    default: 'edge'
   buildFile:
     description: 'The name of the build file'
     required: false

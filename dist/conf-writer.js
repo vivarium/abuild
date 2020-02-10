@@ -21,7 +21,6 @@ function writeConf(conf, confPath) {
     data = data.replace('%JOBS%', conf.jobs.toString());
     data = data.replace('%PACKAGER%', conf.packager);
     data = data.replace('%MAINTAINER%', conf.maintainer);
-    data = data.replace('%VERSION%', conf.version);
     fs.writeFileSync(confPath, data);
 }
 exports.writeConf = writeConf;
@@ -35,5 +34,4 @@ function logConf(conf, confPath) {
     core.debug(`Jobs:       ${conf.jobs}`);
     core.debug(`Packager:   ${conf.packager}`);
     core.debug(`Maintainer: ${conf.maintainer}`);
-    core.debug(`Version:    ${conf.version}`);
 }
