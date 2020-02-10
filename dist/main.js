@@ -40,9 +40,9 @@ function run() {
             keysWriter.writeKey(privKey, _abuild);
             keysWriter.writePrivKeyConf(privKey, _abuild);
             const packages = inputHelper.getPackages(github.workspace);
-            packages.forEach(_package => {
-                abuild.build(_package);
-            });
+            for (let i = 0; i < packages.length; i++) {
+                yield abuild.build(packages[i]);
+            }
             const output = path.join(github.workspace, 'packages', conf.version);
             core.setOutput('repoDir', output);
         }
