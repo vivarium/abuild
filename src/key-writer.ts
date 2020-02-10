@@ -1,42 +1,34 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import * as fs from 'fs';
+import * as path from 'path';
 
-import core from '@actions/core'
+import * as core from '@actions/core';
 
 export interface IKey {
-    name: string;
-    content: string;
+  name: string;
+  content: string;
 }
 
-export async function writeKey(key:IKey, keyPath:string): Promise<void> {
+export function writeKey(key: IKey, keyPath: string) {
+  keyPath = path.join(keyPath, key.name);
 
-    keyPath = path.join(keyPath, key.name);
+  core.debug(`Write key to ${keyPath}`);
 
-    core.debug(`Write key to ${keyPath}`);
-
-    fs.writeFile(keyPath, key.content, (error) => {
-        if (error) {
-            throw error;
-        }
-    });
+  fs.writeFile(keyPath, key.content, error => {
+    if (error) {
+      throw error;
+    }
+  });
 }
 
-export async function writePrivKeyConf(key:IKey, keyPath:string): Promise<void> {
+export function writePrivKeyConf(key: IKey, keyPath: string) {
+  const confPath = path.join(keyPath, 'abuild.conf');
+  keyPath = path.join(keyPath, key.name);
 
-    const confPath = path.join(keyPath, 'abuild.conf');
-    keyPath        = path.join(keyPath, key.name);
+  if (!fs.existsSync(keyPath)) {
+    throw new Error('Private key missing');
+  }
 
-    fs.exists(keyPath, (error) => {
-        if (error) {
-            throw error;
-        }
-    });
+  const confData = `PACKAGER_PRIVKEY="${keyPath}"`;
 
-    const confData = `PACKAGER_PRIVKEY="${keyPath}"`;
-
-    fs.writeFile(confPath, confData, (error) => {
-        if (error) {
-            throw error;
-        }
-    });
+  fs.writeFileSync(confPath, confData);
 }

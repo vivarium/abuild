@@ -1,20 +1,18 @@
-import * as path from 'path'
+import * as process from 'process';
 
-import core from '@actions/core'
-import exec from '@actions/exec'
+import * as core from '@actions/core';
+import * as exec from '@actions/exec';
 
 export interface IPackage {
-    path: string;
-    name: string;
+  path: string;
+  name: string;
 }
 
-export function build(alpinePackage:IPackage): void {
+export async function build(alpinePackage: IPackage): Promise<void> {
+  core.debug(`Build ${alpinePackage.name}`);
 
-    const alpinePackagePath = path.join(alpinePackage.path, alpinePackage.name); 
+  process.chdir(alpinePackage.path);
 
-    core.debug(`Build ${alpinePackage.name}`);
-
-    exec.exec(`cd ${alpinePackagePath}`);
-    exec.exec('abuild -F checksum');
-    exec.exec('abuild -rF');
+  await exec.exec('abuild -F checksum');
+  await exec.exec('abuild -rF');
 }
