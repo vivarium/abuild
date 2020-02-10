@@ -72,7 +72,7 @@ export function getPubKey(): IKey {
 export function getPackages(basePath: string): IPackage[] {
   let packages: Array<IPackage> = [];
 
-  const buildFile = path.join(basePath, 'build.json'); //core.getInput('buildFile');
+  const buildFile = path.join(basePath, core.getInput('buildFile'));
 
   core.debug(`Read packages from: ${buildFile}`);
 
