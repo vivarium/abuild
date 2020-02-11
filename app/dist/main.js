@@ -33,9 +33,9 @@ function run() {
             const privKey = inputHelper.getPrivKey();
             const pubKey = inputHelper.getPubKey();
             const keys = path.join(env.inputDir, 'keys');
-            io.mkdirP(env.inputDir);
-            io.mkdirP(env.outputDir);
-            io.mkdirP(keys);
+            yield io.mkdirP(env.inputDir);
+            yield io.mkdirP(env.outputDir);
+            yield io.mkdirP(keys);
             confWriter.writeConf(conf, skel, env.inputDir);
             confWriter.writeEnv(env, skel, here);
             keysWriter.writeKey(pubKey, keys);

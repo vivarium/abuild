@@ -18,9 +18,9 @@ async function run() {
 
         const keys = path.join(env.inputDir, 'keys');
 
-        io.mkdirP(env.inputDir);
-        io.mkdirP(env.outputDir);
-        io.mkdirP(keys);
+        await io.mkdirP(env.inputDir);
+        await io.mkdirP(env.outputDir);
+        await io.mkdirP(keys);
 
         confWriter.writeConf(conf, skel, env.inputDir);
         confWriter.writeEnv(env, skel, here);
