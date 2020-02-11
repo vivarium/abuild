@@ -1,0 +1,19 @@
+name: Abuild on Linux
+
+on: [push]
+
+jobs:
+  build:
+    name: Build all
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        with:
+          packager: Luca Cantoreggi <luca@cantoreggi.xyz>
+          keyName: dummy-key.rsa
+          privKey: ${{ secrets.dummy_priv_key }}
+          pubKey: ${{ secrets.dummy_pub_key }}
+          alpine: edge
+          prefix: edge
