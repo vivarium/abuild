@@ -1,0 +1,14 @@
+version: '3'
+services:
+  abuild:
+    image: abuild:${ALPINE_VERSION}
+    build: 
+      context: .
+      args:
+        - ALPINE_VERSION=${ALPINE_VERSION}
+        - INPUT_DIR=${INPUT_DIR}
+        - KEY_NAME=${KEY_NAME}
+        - BUILD_FILE=${BUILD_FILE}
+    volumes:
+      - ${WORKSPACE}:/workspace
+      - ${OUTPUT_DIR}:/repository

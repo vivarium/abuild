@@ -34,11 +34,14 @@ inputs:
     required: false
     default: 'build.json'
   prefix:
-    description: 'The folder where to put compiled packages'
+    description: 'The prefix folder where to put compiled packages'
     required: false
     default: ''
+  alpine:
+    description: 'The Alpine version to use'
+    required: true
   keyName:
-    description: 'The name of the used to sign the packages'
+    description: 'The name of the key used to sign the packages'
     required: true
   privKey:
     description: 'The private key used to sign the packages'
@@ -50,8 +53,8 @@ outputs:
   repository:
     description: 'The path of the repository'
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: 'node12'
+  main: 'app/dist/main.js'
 branding:
   icon: 'package'
   color: 'blue'
