@@ -27,8 +27,11 @@ async function run() {
         keysWriter.writeKey(pubKey, keys);
         keysWriter.writeKey(privKey, keys);
 
+        core.warning(env.outputDir);
+
         core.setOutput('repository', env.outputDir);
 
+        await exec.exec('docker-compose', ['build']);
         await exec.exec('docker-compose', ['up']);
         await exec.exec('docker-compose', ['down']);
     } catch (error) {
