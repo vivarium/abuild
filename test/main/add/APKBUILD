@@ -1,0 +1,44 @@
+# Contributor: Luca Cantoreggi
+# Maintainer: Luca Cantoreggi <luca@cantoreggi.xyz>
+pkgname="add"
+pkgver="1.0.0"
+pkgrel=0
+pkgdesc="Dummy program that adds two numbers"
+
+url="https://alpine.vivarium.cloud"
+
+arch="all"
+license="MIT"
+
+makedepends="cmake gtest gtest-dev"
+
+subpackages="$pkgname-dev"
+
+source="${pkgname}-${pkgver}.tar.xz"
+
+builddir="$srcdir/$pkgname-$pkgver"
+
+build() {
+
+	cd "$builddir"
+
+    cmake -DCMAKE_INSTALL_PREFIX=/usr .
+
+    make
+}
+
+check() {
+
+	cd "$builddir"
+
+	make test
+}
+
+package() {
+	
+	cd "$builddir"
+
+	make DESTDIR="$pkgdir/" install
+}
+
+sha512sums="514f41cd38dfdbe0cf882d3e8eba7acb1ecdc92c35e6f1ddbad8ad9e225bbb6aefdc58a678925c1f477597e81dcf0c9bf4d4405e87bb1ef503cde2a98d79ec4d  add-1.0.0.tar.xz"
