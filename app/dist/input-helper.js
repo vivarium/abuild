@@ -47,7 +47,7 @@ function getEnv() {
     const repository = path.join(github.home, 'repository');
     env.inputDir = data;
     env.outputDir = repository;
-    env.workspace = github.workspace;
+    env.workspace = path.join(github.workspace, core.getInput('workspace'));
     return env;
 }
 exports.getEnv = getEnv;

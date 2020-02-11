@@ -54,7 +54,7 @@ export function getEnv(): IEnvironment {
 
     env.inputDir = data;
     env.outputDir = repository;
-    env.workspace = github.workspace;
+    env.workspace = path.join(github.workspace, core.getInput('workspace'));
 
     return env;
 }

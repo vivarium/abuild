@@ -40,7 +40,6 @@ function run() {
             confWriter.writeEnv(env, skel, here);
             keysWriter.writeKey(pubKey, keys);
             keysWriter.writeKey(privKey, keys);
-            core.warning(env.outputDir);
             core.setOutput('repository', env.outputDir);
             yield exec.exec('docker-compose', ['build']);
             yield exec.exec('docker-compose', ['up']);
