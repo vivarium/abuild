@@ -17,4 +17,4 @@ jobs:
           pubKey: ${{ secrets.dummy_pub_key }}
           alpine: edge
           prefix: edge
-          buildFile: test/build.json
+          workspace: test

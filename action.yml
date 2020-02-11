@@ -37,6 +37,9 @@ inputs:
     description: 'The prefix folder where to put compiled packages'
     required: false
     default: ''
+  workspace:
+    description: 'The path to ${buildFile}'
+    required: false
   alpine:
     description: 'The Alpine version to use'
     required: true
