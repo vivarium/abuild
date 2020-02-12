@@ -4,7 +4,7 @@
             "owner": "vivarium-problem-abuild",
             "pattern": [
                 {
-                    "regexp": "^.+ >>> (WARNING|ERROR): (.+)$",
+                    "regexp": "^.+(WARNING|ERROR):\\s(.+)$",
                     "severity": 1,
                     "message": 2
                 }
