@@ -36,8 +36,6 @@ export function getConf(): IAbuildConf {
         conf.jobs = 1;
     }
 
-    conf.prefix = core.getInput('prefix');
-
     return conf;
 }
 
@@ -50,7 +48,7 @@ export function getEnv(): IEnvironment {
 
     const github = getGitHub();
     const data = path.join('.', 'data');
-    const repository = path.join(github.home, 'repository');
+    const repository = path.join(github.home, 'repository', env.alpine);
 
     env.inputDir = data;
     env.outputDir = repository;

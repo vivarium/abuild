@@ -33,7 +33,6 @@ function getConf() {
         core.warning('Number of jobs is zero or less, defaulting to 1...');
         conf.jobs = 1;
     }
-    conf.prefix = core.getInput('prefix');
     return conf;
 }
 exports.getConf = getConf;
@@ -44,7 +43,7 @@ function getEnv() {
     env.keyName = core.getInput('keyName');
     const github = github_helper_1.getGitHub();
     const data = path.join('.', 'data');
-    const repository = path.join(github.home, 'repository');
+    const repository = path.join(github.home, 'repository', env.alpine);
     env.inputDir = data;
     env.outputDir = repository;
     env.workspace = path.join(github.workspace, core.getInput('workspace'));

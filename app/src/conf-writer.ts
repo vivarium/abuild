@@ -10,7 +10,6 @@ export interface IAbuildConf {
     jobs: number;
     packager: string;
     maintainer: string;
-    prefix: string;
 }
 
 export interface IEnvironment {
@@ -41,7 +40,7 @@ export function writeConf(
     data = data.replace('%JOBS%', conf.jobs.toString());
     data = data.replace('%PACKAGER%', conf.packager);
     data = data.replace('%MAINTAINER%', conf.maintainer);
-    data = data.replace('%PREFIX%', conf.prefix);
+    data = data.replace('%PREFIX%', core.getInput('alpine'));
 
     fs.writeFileSync(confPath, data);
 }
@@ -80,7 +79,6 @@ function logConf(conf: IAbuildConf, confPath: string): void {
     core.info(`Jobs:       ${conf.jobs}`);
     core.info(`Packager:   ${conf.packager}`);
     core.info(`Maintainer: ${conf.maintainer}`);
-    core.info(`Prefix:     ${conf.prefix}`);
 
     core.endGroup();
 }
@@ -95,7 +93,7 @@ function logEnv(env: IEnvironment, envPath: string): void {
     core.info(`ALPINE_VERSION: ${env.alpine}`);
     core.info(`KEY_NAME:       ${env.keyName}`);
     core.info(`BUILD_FILE:     ${env.buildFile}`);
-    core.info(`INPUT_DIR:      ${env.inputDir}`);
+    core.info(`INPUT_DIR:      ${path.resolve(env.inputDir)}`);
     core.info(`OUTPUT_DIR:     ${env.outputDir}`);
     core.info(`WORKSPACE:      ${env.workspace}`);
 

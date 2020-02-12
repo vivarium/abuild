@@ -33,10 +33,6 @@ inputs:
     description: 'The name of the build file'
     required: false
     default: 'build.json'
-  prefix:
-    description: 'The prefix folder where to put compiled packages'
-    required: false
-    default: ''
   workspace:
     description: 'The path to ${buildFile}'
     required: false
