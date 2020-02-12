@@ -1,4 +1,4 @@
-name: Abuild on Linux
+name: Test Abuild
 
 on: [push]
 
