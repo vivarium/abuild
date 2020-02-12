@@ -1,3 +1,3 @@
-# Abuil action
+# Abuild action
 
-![Test Abuild](https://github.com/vivarium/alpine/workflows/Test%20Abuild/badge.svg)
+![Test Abuild](https://github.com/vivarium/abuild/workflows/Test%20Abuild/badge.svg)
