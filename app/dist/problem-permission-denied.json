@@ -1,0 +1,13 @@
+{
+    "problemMatcher": [
+        {
+            "owner": "abuild",
+            "pattern": [
+                {
+                    "regexp": "^.*\\| (.+): Permission denied$",
+                    "message": 1
+                }
+            ]
+        }
+    ]
+}

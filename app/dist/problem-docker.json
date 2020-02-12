@@ -1,0 +1,14 @@
+{
+    "problemMatcher": [
+        {
+            "owner": "abuild",
+            "pattern": [
+                {
+                    "regexp": "(^.+exited with code ((?!0).)$)",
+                    "message": 1,
+                    "code": 2
+                }
+            ]
+        }
+    ]
+}

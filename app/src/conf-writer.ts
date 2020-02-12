@@ -65,31 +65,39 @@ export function writeEnv(env: IEnvironment, skelPath: string, envPath: string) {
 }
 
 function logConf(conf: IAbuildConf, confPath: string): void {
-    core.debug(
+    core.startGroup('abuild.conf file configuration');
+
+    core.info(
         'Abuild configuration will be written with the following settings.'
     );
 
-    core.debug(`Path:       ${confPath}`);
+    core.info(`Path:       ${confPath}`);
 
-    core.debug(`CFLAGS:     ${conf.cflags}`);
-    core.debug(`CXXFLAGS:   ${conf.cxxflags}`);
-    core.debug(`CPPFLAGS:   ${conf.cppflags}`);
-    core.debug(`LDFLAGS:    ${conf.ldflags}`);
-    core.debug(`Jobs:       ${conf.jobs}`);
-    core.debug(`Packager:   ${conf.packager}`);
-    core.debug(`Maintainer: ${conf.maintainer}`);
-    core.debug(`Prefix:     ${conf.prefix}`);
+    core.info(`CFLAGS:     ${conf.cflags}`);
+    core.info(`CXXFLAGS:   ${conf.cxxflags}`);
+    core.info(`CPPFLAGS:   ${conf.cppflags}`);
+    core.info(`LDFLAGS:    ${conf.ldflags}`);
+    core.info(`Jobs:       ${conf.jobs}`);
+    core.info(`Packager:   ${conf.packager}`);
+    core.info(`Maintainer: ${conf.maintainer}`);
+    core.info(`Prefix:     ${conf.prefix}`);
+
+    core.endGroup();
 }
 
 function logEnv(env: IEnvironment, envPath: string): void {
-    core.debug('.env will be written with the following settings.');
+    core.startGroup('.env file configuration');
 
-    core.debug(`Path:       ${envPath}`);
+    core.info('.env will be written with the following settings.');
 
-    core.debug(`ALPINE_VERSION: ${env.alpine}`);
-    core.debug(`KEY_NAME:       ${env.keyName}`);
-    core.debug(`BUILD_FILE:     ${env.buildFile}`);
-    core.debug(`INPUT_DIR:      ${env.inputDir}`);
-    core.debug(`OUTPUT_DIR:     ${env.outputDir}`);
-    core.debug(`WORKSPACE:      ${env.workspace}`);
+    core.info(`Path:           ${envPath}`);
+
+    core.info(`ALPINE_VERSION: ${env.alpine}`);
+    core.info(`KEY_NAME:       ${env.keyName}`);
+    core.info(`BUILD_FILE:     ${env.buildFile}`);
+    core.info(`INPUT_DIR:      ${env.inputDir}`);
+    core.info(`OUTPUT_DIR:     ${env.outputDir}`);
+    core.info(`WORKSPACE:      ${env.workspace}`);
+
+    core.endGroup();
 }

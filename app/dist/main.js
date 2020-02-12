@@ -20,6 +20,7 @@ const path = __importStar(require("path"));
 const core = __importStar(require("@actions/core"));
 const exec = __importStar(require("@actions/exec"));
 const io = __importStar(require("@actions/io"));
+const coreCommand = __importStar(require("@actions/core/lib/command"));
 const inputHelper = __importStar(require("./input-helper"));
 const confWriter = __importStar(require("./conf-writer"));
 const keysWriter = __importStar(require("./key-writer"));
@@ -36,6 +37,9 @@ function run() {
             yield io.mkdirP(env.inputDir);
             yield io.mkdirP(env.outputDir);
             yield io.mkdirP(keys);
+            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-abuild.json'));
+            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-docker.json'));
+            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-permission-denied.json'));
             confWriter.writeConf(conf, skel, env.inputDir);
             confWriter.writeEnv(env, skel, here);
             keysWriter.writeKey(pubKey, keys);

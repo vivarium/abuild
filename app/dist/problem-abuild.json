@@ -1,0 +1,14 @@
+{
+    "problemMatcher": [
+        {
+            "owner": "abuild",
+            "pattern": [
+                {
+                    "regexp": "^.+ >>> (WARNING|ERROR): (.+)$",
+                    "severity": 1,
+                    "message": 2
+                }
+            ]
+        }
+    ]
+}
