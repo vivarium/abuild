@@ -49,7 +49,9 @@ async function run() {
         core.setOutput('repository', env.outputDir);
 
         await exec.exec('docker-compose', ['build']);
-        await exec.exec('docker-compose', ['up']);
+        await exec.exec('docker-compose', 
+            ['up', '--abort-on-container-exit', '--exit-code-from=abuild']
+        );
         await exec.exec('docker-compose', ['down']);
     } catch (error) {
         core.setFailed(error.message);

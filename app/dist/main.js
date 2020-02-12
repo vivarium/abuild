@@ -46,7 +46,7 @@ function run() {
             keysWriter.writeKey(privKey, keys);
             core.setOutput('repository', env.outputDir);
             yield exec.exec('docker-compose', ['build']);
-            yield exec.exec('docker-compose', ['up']);
+            yield exec.exec('docker-compose', ['up', '--abort-on-container-exit', '--exit-code-from=abuild']);
             yield exec.exec('docker-compose', ['down']);
         }
         catch (error) {
