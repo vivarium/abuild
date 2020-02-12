@@ -13,9 +13,8 @@ ENV BUILD_FILE=${BUILD_FILE}
 
 RUN apk update && \
     apk add alpine-sdk jq && \
-    adduser --disabled-password --uid ${UID} builder && \
-    addgroup builder -g ${GID} builder && \
-    addgroup builder builder && \
+    addgroup -g ${GID} builder && \
+    adduser --disabled-password --uid ${UID} builder -G builder && \
     addgroup builder abuild
 
 USER builder
