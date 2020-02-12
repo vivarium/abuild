@@ -43,7 +43,7 @@ function getEnv() {
     env.buildFile = core.getInput('buildFile');
     env.keyName = core.getInput('keyName');
     const github = github_helper_1.getGitHub();
-    const data = path.resolve(path.join('.', 'data'));
+    const data = path.join('.', 'data');
     const repository = path.join(github.home, 'repository');
     env.inputDir = data;
     env.outputDir = repository;
