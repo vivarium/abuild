@@ -1,7 +1,7 @@
 {
     "problemMatcher": [
         {
-            "owner": "abuild",
+            "owner": "vivarium-problem-permission-denied",
             "pattern": [
                 {
                     "regexp": "^.*\\| (.+): Permission denied$",
