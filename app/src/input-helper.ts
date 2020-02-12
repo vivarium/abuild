@@ -49,7 +49,7 @@ export function getEnv(): IEnvironment {
     env.keyName = core.getInput('keyName');
 
     const github = getGitHub();
-    const data = path.join('.', 'data');
+    const data = path.resolve(path.join('.', 'data'));
     const repository = path.join(github.home, 'repository');
 
     env.inputDir = data;
