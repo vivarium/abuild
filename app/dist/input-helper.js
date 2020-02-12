@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
@@ -9,6 +18,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
 const core = __importStar(require("@actions/core"));
+const userHelper = __importStar(require("./user-helper"));
 const github_helper_1 = require("./github-helper");
 function getConf() {
     const conf = {};
@@ -37,17 +47,28 @@ function getConf() {
 }
 exports.getConf = getConf;
 function getEnv() {
-    const env = {};
-    env.alpine = core.getInput('alpine');
-    env.buildFile = core.getInput('buildFile');
-    env.keyName = core.getInput('keyName');
-    const github = github_helper_1.getGitHub();
-    const data = path.join('.', 'data');
-    const repository = path.join(github.home, 'repository', env.alpine);
-    env.inputDir = data;
-    env.outputDir = repository;
-    env.workspace = path.join(github.workspace, core.getInput('workspace'));
-    return env;
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            userHelper.getUser()
+                .then(user => {
+                const env = {};
+                env.alpine = core.getInput('alpine');
+                env.buildFile = core.getInput('buildFile');
+                env.keyName = core.getInput('keyName');
+                const github = github_helper_1.getGitHub();
+                const data = path.join('.', 'data');
+                const repository = path.join(github.home, 'repository', env.alpine);
+                env.inputDir = data;
+                env.outputDir = repository;
+                env.workspace = path.join(github.workspace, core.getInput('workspace'));
+                env.user = user;
+                return env;
+            })
+                .then((env) => {
+                resolve(env);
+            });
+        });
+    });
 }
 exports.getEnv = getEnv;
 function getPrivKey() {

@@ -3,6 +3,8 @@ ARG ALPINE_VERSION
 
 FROM alpine:${ALPINE_VERSION}
 
+ARG UID
+ARG GID
 ARG INPUT_DIR
 ARG KEY_NAME
 ARG BUILD_FILE
@@ -11,7 +13,9 @@ ENV BUILD_FILE=${BUILD_FILE}
 
 RUN apk update && \
     apk add alpine-sdk jq && \
-    adduser --disabled-password builder && \
+    adduser --disabled-password --uid ${UID} builder && \
+    addgroup builder -g ${GID} builder && \
+    addgroup builder builder && \
     addgroup builder abuild
 
 USER builder

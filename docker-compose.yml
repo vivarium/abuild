@@ -6,6 +6,8 @@ services:
       context: .
       args:
         - ALPINE_VERSION=${ALPINE_VERSION}
+        - UID=${UID}
+        - GID=${GID}
         - INPUT_DIR=${INPUT_DIR}
         - KEY_NAME=${KEY_NAME}
         - BUILD_FILE=${BUILD_FILE}

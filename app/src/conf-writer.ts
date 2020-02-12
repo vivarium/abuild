@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as core from '@actions/core';
+import { IUser } from './user-helper';
 
 export interface IAbuildConf {
     cflags: string;
@@ -19,6 +20,7 @@ export interface IEnvironment {
     inputDir: string;
     outputDir: string;
     workspace: string;
+    user: IUser;
 }
 
 export function writeConf(
@@ -54,6 +56,8 @@ export function writeEnv(env: IEnvironment, skelPath: string, envPath: string) {
     let data = fs.readFileSync(skelPath, 'utf8');
 
     data = data.replace('%ALPINE_VERSION%', env.alpine);
+    data = data.replace('%UID%', env.user.uid);
+    data = data.replace('%GID%', env.user.gid);
     data = data.replace('%KEY_NAME%', env.keyName);
     data = data.replace('%BUILD_FILE%', env.buildFile);
     data = data.replace('%INPUT_DIR%', env.inputDir);
@@ -91,6 +95,8 @@ function logEnv(env: IEnvironment, envPath: string): void {
     core.info(`Path:           ${envPath}`);
 
     core.info(`ALPINE_VERSION: ${env.alpine}`);
+    core.info(`UID:            ${env.user.uid}`);
+    core.info(`GID:            ${env.user.gid}`);
     core.info(`KEY_NAME:       ${env.keyName}`);
     core.info(`BUILD_FILE:     ${env.buildFile}`);
     core.info(`INPUT_DIR:      ${path.resolve(env.inputDir)}`);

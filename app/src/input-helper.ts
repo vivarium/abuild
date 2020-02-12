@@ -1,10 +1,11 @@
 import * as path from 'path';
-
 import * as core from '@actions/core';
+import * as userHelper from './user-helper';
 
 import { IAbuildConf, IEnvironment } from './conf-writer';
 import { IKey } from './key-writer';
 import { getGitHub } from './github-helper';
+
 
 export function getConf(): IAbuildConf {
     const conf = ({} as unknown) as IAbuildConf;
@@ -39,22 +40,32 @@ export function getConf(): IAbuildConf {
     return conf;
 }
 
-export function getEnv(): IEnvironment {
-    const env = ({} as unknown) as IEnvironment;
+export async function getEnv(): Promise<IEnvironment> {
+    return new Promise((resolve, reject) => {
+        userHelper.getUser()
+        
+        .then(user => {
+            const env = ({} as unknown) as IEnvironment;
 
-    env.alpine = core.getInput('alpine');
-    env.buildFile = core.getInput('buildFile');
-    env.keyName = core.getInput('keyName');
+            env.alpine = core.getInput('alpine');
+            env.buildFile = core.getInput('buildFile');
+            env.keyName = core.getInput('keyName');
+        
+            const github = getGitHub();
+            const data = path.join('.', 'data');
+            const repository = path.join(github.home, 'repository', env.alpine);
+        
+            env.inputDir = data;
+            env.outputDir = repository;
+            env.workspace = path.join(github.workspace, core.getInput('workspace')); 
+            env.user = user;
 
-    const github = getGitHub();
-    const data = path.join('.', 'data');
-    const repository = path.join(github.home, 'repository', env.alpine);
-
-    env.inputDir = data;
-    env.outputDir = repository;
-    env.workspace = path.join(github.workspace, core.getInput('workspace'));
-
-    return env;
+            return env;
+        })
+        .then((env) => {
+            resolve(env);
+        });
+    });
 }
 
 export function getPrivKey(): IKey {

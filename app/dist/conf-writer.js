@@ -32,6 +32,8 @@ function writeEnv(env, skelPath, envPath) {
     logEnv(env, envPath);
     let data = fs.readFileSync(skelPath, 'utf8');
     data = data.replace('%ALPINE_VERSION%', env.alpine);
+    data = data.replace('%UID%', env.user.uid);
+    data = data.replace('%GID%', env.user.gid);
     data = data.replace('%KEY_NAME%', env.keyName);
     data = data.replace('%BUILD_FILE%', env.buildFile);
     data = data.replace('%INPUT_DIR%', env.inputDir);
@@ -58,6 +60,8 @@ function logEnv(env, envPath) {
     core.info('.env will be written with the following settings.');
     core.info(`Path:           ${envPath}`);
     core.info(`ALPINE_VERSION: ${env.alpine}`);
+    core.info(`UID:            ${env.user.uid}`);
+    core.info(`GID:            ${env.user.gid}`);
     core.info(`KEY_NAME:       ${env.keyName}`);
     core.info(`BUILD_FILE:     ${env.buildFile}`);
     core.info(`INPUT_DIR:      ${path.resolve(env.inputDir)}`);

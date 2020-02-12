@@ -27,30 +27,45 @@ const keysWriter = __importStar(require("./key-writer"));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-abuild.json'));
+            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-permission-denied.json'));
             const here = path.resolve('.');
             const skel = path.join(here, 'skel');
             const conf = inputHelper.getConf();
-            const env = inputHelper.getEnv();
             const privKey = inputHelper.getPrivKey();
             const pubKey = inputHelper.getPubKey();
-            const keys = path.join(env.inputDir, 'keys');
-            yield io.mkdirP(env.inputDir);
-            yield io.mkdirP(env.outputDir);
-            yield io.mkdirP(keys);
-            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-abuild.json'));
-            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-permission-denied.json'));
-            confWriter.writeConf(conf, skel, env.inputDir);
-            confWriter.writeEnv(env, skel, here);
-            keysWriter.writeKey(pubKey, keys);
-            keysWriter.writeKey(privKey, keys);
-            core.setOutput('repository', env.outputDir);
-            yield exec.exec('docker-compose', ['build']);
-            yield exec.exec('docker-compose', [
-                'up',
-                '--abort-on-container-exit',
-                '--exit-code-from=abuild'
-            ]);
-            yield exec.exec('docker-compose', ['down']);
+            inputHelper.getEnv()
+                .then(env => {
+                const keys = path.join(env.inputDir, 'keys');
+                Promise.all([
+                    io.mkdirP(env.inputDir),
+                    io.mkdirP(env.outputDir),
+                    io.mkdirP(keys)
+                ])
+                    .then(() => {
+                    confWriter.writeConf(conf, skel, env.inputDir);
+                    confWriter.writeEnv(env, skel, here);
+                    keysWriter.writeKey(pubKey, keys);
+                    keysWriter.writeKey(privKey, keys);
+                    core.setOutput('repository', env.outputDir);
+                });
+            })
+                .then(() => {
+                return exec.exec('docker-compose', ['build']);
+            })
+                .then(() => {
+                return exec.exec('docker-compose', [
+                    'up',
+                    '--abort-on-container-exit',
+                    '--exit-code-from=abuild'
+                ]);
+            })
+                .then(() => {
+                exec.exec('docker-compose', ['down']);
+            })
+                .catch(error => {
+                core.setFailed(error.message);
+            });
         }
         catch (error) {
             core.setFailed(error.message);
