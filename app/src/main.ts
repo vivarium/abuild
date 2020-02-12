@@ -32,12 +32,6 @@ async function run() {
         coreCommand.issueCommand(
             'add-matcher',
             {},
-            path.join(__dirname, 'problem-docker.json')
-        );
-
-        coreCommand.issueCommand(
-            'add-matcher',
-            {},
             path.join(__dirname, 'problem-permission-denied.json')
         );
 
@@ -49,9 +43,11 @@ async function run() {
         core.setOutput('repository', env.outputDir);
 
         await exec.exec('docker-compose', ['build']);
-        await exec.exec('docker-compose', 
-            ['up', '--abort-on-container-exit', '--exit-code-from=abuild']
-        );
+        await exec.exec('docker-compose', [
+            'up',
+            '--abort-on-container-exit',
+            '--exit-code-from=abuild'
+        ]);
         await exec.exec('docker-compose', ['down']);
     } catch (error) {
         core.setFailed(error.message);

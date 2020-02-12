@@ -38,7 +38,6 @@ function run() {
             yield io.mkdirP(env.outputDir);
             yield io.mkdirP(keys);
             coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-abuild.json'));
-            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-docker.json'));
             coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-permission-denied.json'));
             confWriter.writeConf(conf, skel, env.inputDir);
             confWriter.writeEnv(env, skel, here);
@@ -46,7 +45,11 @@ function run() {
             keysWriter.writeKey(privKey, keys);
             core.setOutput('repository', env.outputDir);
             yield exec.exec('docker-compose', ['build']);
-            yield exec.exec('docker-compose', ['up', '--abort-on-container-exit', '--exit-code-from=abuild']);
+            yield exec.exec('docker-compose', [
+                'up',
+                '--abort-on-container-exit',
+                '--exit-code-from=abuild'
+            ]);
             yield exec.exec('docker-compose', ['down']);
         }
         catch (error) {
