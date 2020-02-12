@@ -4,8 +4,8 @@
             "owner": "vivarium-problem-permission-denied",
             "pattern": [
                 {
-                    "regexp": "^.+\\|\\s*(.+):\\sPermission denied",
-                    "message": 1
+                    "regexp": "^.+\\|\\s*(.+?\\s)(.+):\\sPermission denied",
+                    "message": 2
                 }
             ]
         }
