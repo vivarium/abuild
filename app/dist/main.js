@@ -31,19 +31,20 @@ function run() {
             coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-permission-denied.json'));
             const here = path.resolve(path.join(__dirname, '..', '..'));
             const skel = path.join(here, 'skel');
+            const data = path.join(here, 'data');
+            const keys = path.join(data, 'keys');
             const conf = inputHelper.getConf();
             const privKey = inputHelper.getPrivKey();
             const pubKey = inputHelper.getPubKey();
             inputHelper
                 .getEnv()
                 .then(env => {
-                const keys = path.join(env.inputDir, 'keys');
                 Promise.all([
                     io.mkdirP(env.inputDir),
                     io.mkdirP(env.outputDir),
                     io.mkdirP(keys)
                 ]).then(() => {
-                    confWriter.writeConf(conf, skel, env.inputDir);
+                    confWriter.writeConf(conf, skel, data);
                     confWriter.writeEnv(env, skel, here);
                     keysWriter.writeKey(pubKey, keys);
                     keysWriter.writeKey(privKey, keys);
