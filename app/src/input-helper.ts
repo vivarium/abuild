@@ -52,9 +52,7 @@ export async function getEnv(): Promise<IEnvironment> {
                 env.keyName = core.getInput('keyName');
 
                 const github = getGitHub();
-                const data = path.resolve(
-                    path.join(__dirname, '..', '..', 'data')
-                );
+                const data = 'data';
 
                 let prefix = core.getInput('alpine');
                 if (prefix != 'edge') {

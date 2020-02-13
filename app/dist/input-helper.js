@@ -57,7 +57,7 @@ function getEnv() {
                 env.buildFile = core.getInput('buildFile');
                 env.keyName = core.getInput('keyName');
                 const github = github_helper_1.getGitHub();
-                const data = path.resolve(path.join(__dirname, '..', '..', 'data'));
+                const data = 'data';
                 let prefix = core.getInput('alpine');
                 if (prefix != 'edge') {
                     prefix = `v${prefix}`;
