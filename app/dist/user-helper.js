@@ -22,14 +22,14 @@ function getUser() {
         let user = {};
         yield exec.exec('id', ['-u'], {
             listeners: {
-                stdout: (data) => {
+                stdout: data => {
                     user.uid = data.toString().slice(0, data.length - 1);
                 }
             }
         });
         yield exec.exec('id', ['-g'], {
             listeners: {
-                stdout: (data) => {
+                stdout: data => {
                     user.gid = data.toString().slice(0, data.length - 1);
                 }
             }

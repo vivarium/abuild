@@ -29,20 +29,20 @@ function run() {
         try {
             coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-abuild.json'));
             coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-permission-denied.json'));
-            const here = path.resolve('.');
+            const here = path.resolve(path.join(__dirname, '..', '..'));
             const skel = path.join(here, 'skel');
             const conf = inputHelper.getConf();
             const privKey = inputHelper.getPrivKey();
             const pubKey = inputHelper.getPubKey();
-            inputHelper.getEnv()
+            inputHelper
+                .getEnv()
                 .then(env => {
                 const keys = path.join(env.inputDir, 'keys');
                 Promise.all([
                     io.mkdirP(env.inputDir),
                     io.mkdirP(env.outputDir),
                     io.mkdirP(keys)
-                ])
-                    .then(() => {
+                ]).then(() => {
                     confWriter.writeConf(conf, skel, env.inputDir);
                     confWriter.writeEnv(env, skel, here);
                     keysWriter.writeKey(pubKey, keys);
@@ -51,17 +51,23 @@ function run() {
                 });
             })
                 .then(() => {
-                return exec.exec('docker-compose', ['build']);
+                return exec.exec('docker-compose', ['build'], {
+                    cwd: here
+                });
             })
                 .then(() => {
                 return exec.exec('docker-compose', [
                     'up',
                     '--abort-on-container-exit',
                     '--exit-code-from=abuild'
-                ]);
+                ], {
+                    cwd: here
+                });
             })
                 .then(() => {
-                exec.exec('docker-compose', ['down']);
+                exec.exec('docker-compose', ['down'], {
+                    cwd: here
+                });
             })
                 .catch(error => {
                 core.setFailed(error.message);

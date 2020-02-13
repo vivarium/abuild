@@ -49,22 +49,27 @@ exports.getConf = getConf;
 function getEnv() {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
-            userHelper.getUser()
+            userHelper
+                .getUser()
                 .then(user => {
                 const env = {};
                 env.alpine = core.getInput('alpine');
                 env.buildFile = core.getInput('buildFile');
                 env.keyName = core.getInput('keyName');
                 const github = github_helper_1.getGitHub();
-                const data = path.join('.', 'data');
-                const repository = path.join(github.home, 'repository', env.alpine);
+                const data = path.resolve(path.join(__dirname, '..', '..', 'data'));
+                let prefix = core.getInput('alpine');
+                if (prefix != 'edge') {
+                    prefix = `v${prefix}`;
+                }
+                const repository = path.join(github.home, 'repository', prefix);
                 env.inputDir = data;
                 env.outputDir = repository;
                 env.workspace = path.join(github.workspace, core.getInput('workspace'));
                 env.user = user;
                 return env;
             })
-                .then((env) => {
+                .then(env => {
                 resolve(env);
             });
         });

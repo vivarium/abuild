@@ -6,7 +6,6 @@ import { IAbuildConf, IEnvironment } from './conf-writer';
 import { IKey } from './key-writer';
 import { getGitHub } from './github-helper';
 
-
 export function getConf(): IAbuildConf {
     const conf = ({} as unknown) as IAbuildConf;
 
@@ -42,29 +41,41 @@ export function getConf(): IAbuildConf {
 
 export async function getEnv(): Promise<IEnvironment> {
     return new Promise((resolve, reject) => {
-        userHelper.getUser()
-        
-        .then(user => {
-            const env = ({} as unknown) as IEnvironment;
+        userHelper
+            .getUser()
 
-            env.alpine = core.getInput('alpine');
-            env.buildFile = core.getInput('buildFile');
-            env.keyName = core.getInput('keyName');
-        
-            const github = getGitHub();
-            const data = path.join('.', 'data');
-            const repository = path.join(github.home, 'repository', env.alpine);
-        
-            env.inputDir = data;
-            env.outputDir = repository;
-            env.workspace = path.join(github.workspace, core.getInput('workspace')); 
-            env.user = user;
+            .then(user => {
+                const env = ({} as unknown) as IEnvironment;
 
-            return env;
-        })
-        .then((env) => {
-            resolve(env);
-        });
+                env.alpine = core.getInput('alpine');
+                env.buildFile = core.getInput('buildFile');
+                env.keyName = core.getInput('keyName');
+
+                const github = getGitHub();
+                const data = path.resolve(
+                    path.join(__dirname, '..', '..', 'data')
+                );
+
+                let prefix = core.getInput('alpine');
+                if (prefix != 'edge') {
+                    prefix = `v${prefix}`;
+                }
+
+                const repository = path.join(github.home, 'repository', prefix);
+
+                env.inputDir = data;
+                env.outputDir = repository;
+                env.workspace = path.join(
+                    github.workspace,
+                    core.getInput('workspace')
+                );
+                env.user = user;
+
+                return env;
+            })
+            .then(env => {
+                resolve(env);
+            });
     });
 }
 

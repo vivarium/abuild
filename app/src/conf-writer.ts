@@ -42,7 +42,13 @@ export function writeConf(
     data = data.replace('%JOBS%', conf.jobs.toString());
     data = data.replace('%PACKAGER%', conf.packager);
     data = data.replace('%MAINTAINER%', conf.maintainer);
-    data = data.replace('%PREFIX%', core.getInput('alpine'));
+
+    let prefix = core.getInput('alpine');
+    if (prefix != 'edge') {
+        prefix = `v${prefix}`;
+    }
+
+    data = data.replace('%PREFIX%', prefix);
 
     fs.writeFileSync(confPath, data);
 }
