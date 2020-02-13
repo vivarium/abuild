@@ -7,6 +7,10 @@ jobs:
     name: Build all
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        alpine: ["3.8", "3.9", "3.10", "3.11", "edge"]
+
     steps:
       - uses: actions/checkout@v2
       - uses: ./
@@ -15,5 +19,5 @@ jobs:
           keyName: dummy-key.rsa
           privKey: ${{ secrets.dummy_priv_key }}
           pubKey: ${{ secrets.dummy_pub_key }}
-          alpine: edge
+          alpine: ${{ matrix.alpine }}
           workspace: test
