@@ -11,11 +11,6 @@ USE_CCACHE=1
 
 SRCDEST=/var/cache/distfiles
 
-# uncomment line below to store built packages in other location
-# The package will be stored as $REPODEST/$repo/$pkgname-$pkgver-r$pkgrel.apk
-# where $repo is the name of the parent directory of $startdir.
-REPODEST=/repository/%PREFIX%
-
 # PACKAGER and MAINTAINER are used by newapkbuild when creating new aports for
 # the APKBUILD's "Contributor:" and "Maintainer:" comments, respectively.
 PACKAGER="%PACKAGER%"
