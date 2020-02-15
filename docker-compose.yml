@@ -1,6 +1,8 @@
 version: '3'
 services:
   abuild:
+    stdin_open: true
+    tty: true
     image: abuild:${ALPINE_VERSION}
     build: 
       context: .
@@ -8,9 +10,8 @@ services:
         - ALPINE_VERSION=${ALPINE_VERSION}
         - UID=${UID}
         - GID=${GID}
-        - INPUT_DIR=${INPUT_DIR}
         - KEY_NAME=${KEY_NAME}
-        - BUILD_FILE=${BUILD_FILE}
+        - WORKDIR=${WORKDIR}
     volumes:
       - ${WORKSPACE}:/workspace
-      - ${OUTPUT_DIR}:/repository
+      - ${REPOSITORY}:/repository

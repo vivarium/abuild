@@ -29,12 +29,8 @@ inputs:
     description: 'Name and email address of the maintainer'
     required: false
     default: ''
-  buildFile:
-    description: 'The name of the build file'
-    required: false
-    default: 'build.json'
-  workspace:
-    description: 'The path to ${buildFile}'
+  workdir:
+    description: 'The relative path to ${buildFile}'
     required: false
   alpine:
     description: 'The Alpine version to use'
@@ -54,6 +50,8 @@ outputs:
 runs:
   using: 'node12'
   main: 'app/dist/main.js'
+args:
+  - '-g'
 branding:
   icon: 'package'
   color: 'blue'
