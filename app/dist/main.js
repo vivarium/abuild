@@ -37,27 +37,17 @@ function github(hierarchy, container) {
         return new Cached_1.Cached(container, hierarchy, env.alpine());
     });
 }
-function local(hierarchy, container) {
-    return __awaiter(this, void 0, void 0, function* () {
-        Core.info(hierarchy.root());
-        return container;
-    });
-}
 function configure(container) {
     return __awaiter(this, void 0, void 0, function* () {
         if (Process.argv.length > 3) {
             Core.warning('This program needs exactly one argument to start, ignoring others.');
         }
         const hierarchy = yield Hierarchy_1.Hierarchy.fromAction();
-        const arg = Process.argv.length == 3 ? Process.argv[2] : '-n';
+        const arg = Process.argv.length == 3 ? Process.argv[2] : '-g';
         Core.debug(arg);
         switch (arg) {
-            case '-g':
-                return github(hierarchy, container);
-            case '-i':
-                return local(hierarchy, container);
             default:
-                return container;
+                return github(hierarchy, container);
         }
     });
 }

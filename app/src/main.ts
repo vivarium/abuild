@@ -33,14 +33,6 @@ async function github(
     return new Cached(container, hierarchy, env.alpine());
 }
 
-async function local(
-    hierarchy: Hierarchy,
-    container: Container
-): Promise<Container> {
-    Core.info(hierarchy.root());
-    return container;
-}
-
 async function configure(container: Container): Promise<Container> {
     if (Process.argv.length > 3) {
         Core.warning(
@@ -50,16 +42,12 @@ async function configure(container: Container): Promise<Container> {
 
     const hierarchy = await Hierarchy.fromAction();
 
-    const arg = Process.argv.length == 3 ? Process.argv[2] : '-n';
+    const arg = Process.argv.length == 3 ? Process.argv[2] : '-g';
 
     Core.debug(arg);
     switch (arg) {
-        case '-g':
-            return github(hierarchy, container);
-        case '-i':
-            return local(hierarchy, container);
         default:
-            return container;
+            return github(hierarchy, container);
     }
 }
 
