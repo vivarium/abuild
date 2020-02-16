@@ -1,0 +1,14 @@
+
+{
+    "problemMatcher": [
+        {
+            "owner": "vivarium-problem-permission-denied",
+            "pattern": [
+                {
+                    "regexp": "^.+\\|\\s*(.+?\\s)(.+):\\sPermission denied",
+                    "message": 2
+                }
+            ]
+        }
+    ]
+}
