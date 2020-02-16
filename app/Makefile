@@ -7,6 +7,7 @@ format: prepare
 	@npm run format
 
 dev: format
+	if [ -d dist ]; then rm -r dist; fi
 	@npm run build
 
 production: dev
