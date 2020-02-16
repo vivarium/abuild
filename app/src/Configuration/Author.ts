@@ -9,8 +9,6 @@ export class Author {
         const packager = Core.getInput('packager');
         const maintainer = Core.getInput('maintainer');
 
-        console.log('Author finish');
-
         return new Author(packager, maintainer);
     }
 

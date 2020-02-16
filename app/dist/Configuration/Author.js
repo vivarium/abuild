@@ -26,7 +26,6 @@ class Author {
         return __awaiter(this, void 0, void 0, function* () {
             const packager = Core.getInput('packager');
             const maintainer = Core.getInput('maintainer');
-            console.log('Author finish');
             return new Author(packager, maintainer);
         });
     }
