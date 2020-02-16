@@ -16,27 +16,31 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const exec = __importStar(require("@actions/exec"));
-function getUser() {
-    return __awaiter(this, void 0, void 0, function* () {
-        let user = {};
-        yield exec.exec('id', ['-u'], {
-            listeners: {
-                stdout: data => {
-                    user.uid = data.toString().slice(0, data.length - 1);
-                }
+const FileSystem = __importStar(require("fs"));
+const Path = __importStar(require("path"));
+const Core = __importStar(require("@actions/core"));
+class Key {
+    constructor(name, content) {
+        if (name.includes('/')) {
+            throw new Error('Key name contains invalid character /');
+        }
+        this._name = name;
+        this._content = content;
+    }
+    write(destPath) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!FileSystem.statSync(destPath).isDirectory()) {
+                throw new Error('path must be a directory');
             }
-        });
-        yield exec.exec('id', ['-g'], {
-            listeners: {
-                stdout: data => {
-                    user.gid = data.toString().slice(0, data.length - 1);
+            const file = Path.join(destPath, this._name);
+            Core.info(`Writing key ${this._name} to ${destPath}`);
+            FileSystem.writeFile(file, this._content, error => {
+                if (error) {
+                    throw error;
                 }
-            }
+            });
         });
-        return new Promise((resolve, reject) => {
-            resolve(user);
-        });
-    });
+    }
 }
-exports.getUser = getUser;
+exports.Key = Key;
+//# sourceMappingURL=Key.js.map

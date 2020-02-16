@@ -16,67 +16,66 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const path = __importStar(require("path"));
-const core = __importStar(require("@actions/core"));
-const exec = __importStar(require("@actions/exec"));
-const io = __importStar(require("@actions/io"));
-const coreCommand = __importStar(require("@actions/core/lib/command"));
-const inputHelper = __importStar(require("./input-helper"));
-const confWriter = __importStar(require("./conf-writer"));
-const keysWriter = __importStar(require("./key-writer"));
+const Process = __importStar(require("process"));
+const Core = __importStar(require("@actions/core"));
+const Command = __importStar(require("@actions/core/lib/command"));
+const Path = __importStar(require("path"));
+const Configuration_1 = require("./Configuration");
+const Cached_1 = require("./Container/Cached");
+const Docker_1 = require("./Container/Docker");
+const Hierarchy_1 = require("./Hierarchy");
+function matchers() {
+    return __awaiter(this, void 0, void 0, function* () {
+        Command.issueCommand('add-matcher', {}, Path.join(__dirname, 'problem-abuild.json'));
+        Command.issueCommand('add-matcher', {}, Path.join(__dirname, 'problem-permission-denied.json'));
+    });
+}
+function github(hierarchy, container) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const conf = yield Configuration_1.Configuration.fromAction();
+        const env = yield conf.write(hierarchy);
+        return new Cached_1.Cached(container, hierarchy, env.alpine());
+    });
+}
+function local(hierarchy, container) {
+    return __awaiter(this, void 0, void 0, function* () {
+        Core.info(hierarchy.root());
+        return container;
+    });
+}
+function configure(container) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (Process.argv.length > 3) {
+            Core.warning('This program needs exactly one argument to start, ignoring others.');
+        }
+        const hierarchy = yield Hierarchy_1.Hierarchy.fromAction();
+        const arg = Process.argv.length == 3 ? Process.argv[2] : '-n';
+        Core.debug(arg);
+        switch (arg) {
+            case '-g':
+                return github(hierarchy, container);
+            case '-i':
+                return local(hierarchy, container);
+            default:
+                return container;
+        }
+    });
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        let container = new Docker_1.Docker('abuild');
         try {
-            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-abuild.json'));
-            coreCommand.issueCommand('add-matcher', {}, path.join(__dirname, 'problem-permission-denied.json'));
-            const here = path.resolve(path.join(__dirname, '..', '..'));
-            const skel = path.join(here, 'skel');
-            const data = path.join(here, 'data');
-            const keys = path.join(data, 'keys');
-            const conf = inputHelper.getConf();
-            const privKey = inputHelper.getPrivKey();
-            const pubKey = inputHelper.getPubKey();
-            inputHelper
-                .getEnv()
-                .then(env => {
-                Promise.all([
-                    io.mkdirP(env.inputDir),
-                    io.mkdirP(env.outputDir),
-                    io.mkdirP(keys)
-                ]).then(() => {
-                    confWriter.writeConf(conf, skel, data);
-                    confWriter.writeEnv(env, skel, here);
-                    keysWriter.writeKey(pubKey, keys);
-                    keysWriter.writeKey(privKey, keys);
-                    core.setOutput('repository', env.outputDir);
-                });
-            })
-                .then(() => {
-                return exec.exec('docker-compose', ['build'], {
-                    cwd: here
-                });
-            })
-                .then(() => {
-                return exec.exec('docker-compose', [
-                    'up',
-                    '--abort-on-container-exit',
-                    '--exit-code-from=abuild'
-                ], {
-                    cwd: here
-                });
-            })
-                .then(() => {
-                exec.exec('docker-compose', ['down'], {
-                    cwd: here
-                });
-            })
-                .catch(error => {
-                core.setFailed(error.message);
-            });
+            yield matchers();
+            container = yield configure(container);
+            yield container.start();
         }
         catch (error) {
-            core.setFailed(error.message);
+            Core.setFailed(error.message);
+        }
+        finally {
+            container.destroy();
         }
     });
 }
 run();
+//# sourceMappingURL=main.js.map
