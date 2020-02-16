@@ -30,7 +30,7 @@ inputs:
     required: false
     default: ''
   workdir:
-    description: 'The relative path to ${buildFile}'
+    description: 'The relative path to alpine.json'
     required: false
   alpine:
     description: 'The Alpine version to use'
@@ -55,3 +55,4 @@ args:
 branding:
   icon: 'package'
   color: 'blue'
+  
