@@ -50,8 +50,8 @@ outputs:
 runs:
   using: 'node12'
   main: 'app/dist/main.js'
-args:
-  - '-g'
+  args:
+    - '-g'
 branding:
   icon: 'package'
   color: 'blue'
