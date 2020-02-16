@@ -1,79 +1,79 @@
-import * as path from 'path';
-import * as core from '@actions/core';
-import * as exec from '@actions/exec';
-import * as io from '@actions/io';
-import * as coreCommand from '@actions/core/lib/command';
-import * as inputHelper from './input-helper';
-import * as confWriter from './conf-writer';
-import * as keysWriter from './key-writer';
+import * as Process from 'process';
+import * as Core from '@actions/core';
+import * as Command from '@actions/core/lib/command';
+import * as Path from 'path';
 
-async function run() {
+import { Container } from './Container';
+import { Configuration } from './Configuration';
+import { Cached } from './Container/Cached';
+import { Docker } from './Container/Docker';
+import { Hierarchy } from './Hierarchy';
+
+async function matchers(): Promise<void> {
+    Command.issueCommand(
+        'add-matcher',
+        {},
+        Path.join(__dirname, 'problem-abuild.json')
+    );
+
+    Command.issueCommand(
+        'add-matcher',
+        {},
+        Path.join(__dirname, 'problem-permission-denied.json')
+    );
+}
+
+async function github(
+    hierarchy: Hierarchy,
+    container: Container
+): Promise<Container> {
+    const conf = await Configuration.fromAction();
+    const env = await conf.write(hierarchy);
+
+    return new Cached(container, hierarchy, env.alpine());
+}
+
+async function local(
+    hierarchy: Hierarchy,
+    container: Container
+): Promise<Container> {
+    Core.info(hierarchy.root());
+    return container;
+}
+
+async function configure(container: Container): Promise<Container> {
+    if (Process.argv.length > 3) {
+        Core.warning(
+            'This program needs exactly one argument to start, ignoring others.'
+        );
+    }
+
+    const hierarchy = await Hierarchy.fromAction();
+
+    const arg = Process.argv.length == 3 ? Process.argv[2] : '-n';
+
+    Core.debug(arg);
+    switch (arg) {
+        case '-g':
+            return github(hierarchy, container);
+        case '-i':
+            return local(hierarchy, container);
+        default:
+            return container;
+    }
+}
+
+async function run(): Promise<void> {
+    let container: Container = new Docker('abuild');
+
     try {
-        coreCommand.issueCommand(
-            'add-matcher',
-            {},
-            path.join(__dirname, 'problem-abuild.json')
-        );
-
-        coreCommand.issueCommand(
-            'add-matcher',
-            {},
-            path.join(__dirname, 'problem-permission-denied.json')
-        );
-
-        const here = path.resolve(path.join(__dirname, '..', '..'));
-        const skel = path.join(here, 'skel');
-        const data = path.join(here, 'data');
-        const keys = path.join(data, 'keys');
-
-        const conf = inputHelper.getConf();
-        const privKey = inputHelper.getPrivKey();
-        const pubKey = inputHelper.getPubKey();
-
-        inputHelper
-            .getEnv()
-            .then(env => {
-                Promise.all([
-                    io.mkdirP(env.inputDir),
-                    io.mkdirP(env.outputDir),
-                    io.mkdirP(keys)
-                ]).then(() => {
-                    confWriter.writeConf(conf, skel, data);
-                    confWriter.writeEnv(env, skel, here);
-                    keysWriter.writeKey(pubKey, keys);
-                    keysWriter.writeKey(privKey, keys);
-
-                    core.setOutput('repository', env.outputDir);
-                });
-            })
-            .then(() => {
-                return exec.exec('docker-compose', ['build'], {
-                    cwd: here
-                });
-            })
-            .then(() => {
-                return exec.exec(
-                    'docker-compose',
-                    [
-                        'up',
-                        '--abort-on-container-exit',
-                        '--exit-code-from=abuild'
-                    ],
-                    {
-                        cwd: here
-                    }
-                );
-            })
-            .then(() => {
-                exec.exec('docker-compose', ['down'], {
-                    cwd: here
-                });
-            })
-            .catch(error => {
-                core.setFailed(error.message);
-            });
+        await matchers();
+        container = await configure(container);
+        await container.start();
     } catch (error) {
-        core.setFailed(error.message);
+        Core.setFailed(error.message);
+    } finally {
+        container.destroy();
     }
 }
 
