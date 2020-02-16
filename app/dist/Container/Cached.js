@@ -17,11 +17,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Path = __importStar(require("path"));
-const OS = __importStar(require("os"));
 const FileSystem = __importStar(require("fs"));
 const Exec = __importStar(require("@actions/exec"));
 const Core = __importStar(require("@actions/core"));
-const IO = __importStar(require("@actions/io"));
 const Container_1 = require("../Container");
 class Cached extends Container_1.Container {
     constructor(container, hierarchy, alpine) {
@@ -48,7 +46,6 @@ class Cached extends Container_1.Container {
     }
     destroy() {
         return __awaiter(this, void 0, void 0, function* () {
-            const tmp = Path.join(OS.tmpdir(), this._image);
             const history = yield this.history();
             try {
                 yield Exec.exec('docker', [
@@ -57,9 +54,8 @@ class Cached extends Container_1.Container {
                     `${this.name()}:${this._version}`,
                     ...history,
                     '-o',
-                    tmp
+                    this._cache
                 ]);
-                yield IO.cp(tmp, this._cache);
             }
             catch (error) {
                 Core.error(error.message);

@@ -1,10 +1,8 @@
 import * as Path from 'path';
-import * as OS from 'os';
 import * as FileSystem from 'fs';
 
 import * as Exec from '@actions/exec';
 import * as Core from '@actions/core';
-import * as IO from '@actions/io';
 
 import { Container } from '../Container';
 import { Hierarchy } from '../Hierarchy';
@@ -49,7 +47,6 @@ export class Cached extends Container {
     }
 
     public async destroy(): Promise<void> {
-        const tmp = Path.join(OS.tmpdir(), this._image);
         const history = await this.history();
 
         try {
@@ -59,10 +56,8 @@ export class Cached extends Container {
                 `${this.name()}:${this._version}`,
                 ...history,
                 '-o',
-                tmp
+                this._cache
             ]);
-
-            await IO.cp(tmp, this._cache);
         } catch (error) {
             Core.error(error.message);
             Core.error("Container image can't be cached");
