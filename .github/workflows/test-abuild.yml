@@ -20,4 +20,4 @@ jobs:
           privKey: ${{ secrets.dummy_priv_key }}
           pubKey: ${{ secrets.dummy_pub_key }}
           alpine: ${{ matrix.alpine }}
-          workspace: test
+          workdir: test
