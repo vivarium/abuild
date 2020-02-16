@@ -26,8 +26,9 @@ const Docker_1 = require("./Container/Docker");
 const Hierarchy_1 = require("./Hierarchy");
 function matchers() {
     return __awaiter(this, void 0, void 0, function* () {
-        Command.issueCommand('add-matcher', {}, Path.join(__dirname, 'problem-abuild.json'));
-        Command.issueCommand('add-matcher', {}, Path.join(__dirname, 'problem-permission-denied.json'));
+        const problem = Path.join(__dirname, '..', 'problem');
+        Command.issueCommand('add-matcher', {}, Path.join(problem, 'problem-abuild.json'));
+        Command.issueCommand('add-matcher', {}, Path.join(problem, 'problem-permission-denied.json'));
     });
 }
 function github(hierarchy, container) {

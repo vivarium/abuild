@@ -10,16 +10,17 @@ import { Docker } from './Container/Docker';
 import { Hierarchy } from './Hierarchy';
 
 async function matchers(): Promise<void> {
+    const problem = Path.join(__dirname, '..', 'problem');
     Command.issueCommand(
         'add-matcher',
         {},
-        Path.join(__dirname, 'problem-abuild.json')
+        Path.join(problem, 'problem-abuild.json')
     );
 
     Command.issueCommand(
         'add-matcher',
         {},
-        Path.join(__dirname, 'problem-permission-denied.json')
+        Path.join(problem, 'problem-permission-denied.json')
     );
 }
 
