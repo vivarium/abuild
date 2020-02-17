@@ -56,13 +56,13 @@ class Cached extends Container_1.Container {
                     '-o',
                     this._cache
                 ]);
+                Core.info(`Abuild image cached to ${this._cache}`);
             }
             catch (error) {
                 Core.error(error.message);
                 Core.error("Container image can't be cached");
             }
             finally {
-                Core.info(`Abuild image cached to ${this._cache}`);
                 yield this._container.destroy();
             }
         });
