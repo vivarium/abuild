@@ -10,6 +10,7 @@ export class User {
         let gid = 1000;
 
         await Exec.exec('id', ['-u'], {
+            silent: true,
             listeners: {
                 stdout: buffer => {
                     uid = parseInt(
@@ -20,6 +21,7 @@ export class User {
         });
 
         await Exec.exec('id', ['-g'], {
+            silent: true,
             listeners: {
                 stdout: buffer => {
                     gid = parseInt(

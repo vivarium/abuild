@@ -75,6 +75,7 @@ export class Cached extends Container {
             'docker',
             ['history', '-q', `${this.name()}:${this._version}`],
             {
+                silent: true,
                 listeners: {
                     stdout: buffer => {
                         history = buffer

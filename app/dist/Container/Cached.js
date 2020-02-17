@@ -71,6 +71,7 @@ class Cached extends Container_1.Container {
         return __awaiter(this, void 0, void 0, function* () {
             let history = [];
             yield Exec.exec('docker', ['history', '-q', `${this.name()}:${this._version}`], {
+                silent: true,
                 listeners: {
                     stdout: buffer => {
                         history = buffer

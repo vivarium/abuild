@@ -32,6 +32,7 @@ class User {
             let uid = 1000;
             let gid = 1000;
             yield Exec.exec('id', ['-u'], {
+                silent: true,
                 listeners: {
                     stdout: buffer => {
                         uid = parseInt(buffer.toString().slice(0, buffer.length - 1));
@@ -39,6 +40,7 @@ class User {
                 }
             });
             yield Exec.exec('id', ['-g'], {
+                silent: true,
                 listeners: {
                     stdout: buffer => {
                         gid = parseInt(buffer.toString().slice(0, buffer.length - 1));
