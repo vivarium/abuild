@@ -1,7 +1,7 @@
 {
   "name": "@vivarium/abuild",
   "version": "1.0.0",
-  "description": "Container template for building a Alpine repository",
+  "description": "An action for building a custom Alpine repository",
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
