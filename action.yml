@@ -1,5 +1,5 @@
 name: 'Alpine abuild action'
-description: 'Build a custom Alpine repository'
+description: 'An action for building a custom Alpine repository'
 author: 'Luca Cantoreggi'
 inputs: 
   cflags:
