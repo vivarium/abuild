@@ -51,18 +51,13 @@ export class Hierarchy {
         return skel;
     }
 
-    public cache(): string {
+    public cache(version: string): string {
         let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
-        if (cacheRoot) {
-            cacheRoot = Path.join(cacheRoot, 'abuild');
-        } else {
-            cacheRoot = Path.join(
-                this.baseLocation(),
-                'actions',
-                'cache',
-                'abuild'
-            );
+        if (!cacheRoot) {
+            cacheRoot = Path.join(this.baseLocation(), 'actions', 'cache');
         }
+
+        cacheRoot = Path.join(cacheRoot, 'abuild', version);
 
         if (!FileSystem.existsSync(cacheRoot)) {
             IO.mkdirP(cacheRoot);

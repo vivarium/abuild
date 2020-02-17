@@ -55,14 +55,12 @@ class Hierarchy {
         }
         return skel;
     }
-    cache() {
+    cache(version) {
         let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
-        if (cacheRoot) {
-            cacheRoot = Path.join(cacheRoot, 'abuild');
+        if (!cacheRoot) {
+            cacheRoot = Path.join(this.baseLocation(), 'actions', 'cache');
         }
-        else {
-            cacheRoot = Path.join(this.baseLocation(), 'actions', 'cache', 'abuild');
-        }
+        cacheRoot = Path.join(cacheRoot, 'abuild', version);
         if (!FileSystem.existsSync(cacheRoot)) {
             IO.mkdirP(cacheRoot);
         }

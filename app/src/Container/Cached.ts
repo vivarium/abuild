@@ -3,6 +3,7 @@ import * as FileSystem from 'fs';
 
 import * as Exec from '@actions/exec';
 import * as Core from '@actions/core';
+import * as IO from '@actions/io';
 
 import { Container } from '../Container';
 import { Hierarchy } from '../Hierarchy';
@@ -16,6 +17,8 @@ export class Cached extends Container {
 
     private _cache: string;
 
+    private _complete: string;
+
     public constructor(
         container: Container,
         hierarchy: Hierarchy,
@@ -27,11 +30,17 @@ export class Cached extends Container {
         this._version = alpine;
 
         this._image = `${this._version}.tar`;
-        this._cache = Path.join(hierarchy.cache(), this._image);
+
+        const cachePath = hierarchy.cache(this._version);
+        this._cache = Path.join(cachePath, this._image);
+        this._complete = Path.join(cachePath, '.complete');
     }
 
     public async build(): Promise<void> {
-        if (FileSystem.existsSync(this._cache)) {
+        if (
+            FileSystem.existsSync(this._complete) &&
+            FileSystem.existsSync(this._cache)
+        ) {
             Core.info(
                 `Cache hit! Found ${this.name()} version ${this._version}`
             );
@@ -47,9 +56,10 @@ export class Cached extends Container {
     }
 
     public async destroy(): Promise<void> {
-        const history = await this.history();
-
         try {
+            IO.rmRF(this._complete);
+
+            const history = await this.history();
             await Exec.exec('docker', [
                 'image',
                 'save',
@@ -58,6 +68,8 @@ export class Cached extends Container {
                 '-o',
                 this._cache
             ]);
+
+            FileSystem.writeFileSync(this._complete, '');
 
             Core.info(`Abuild image cached to ${this._cache}`);
         } catch (error) {
