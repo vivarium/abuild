@@ -63,7 +63,10 @@ class Hierarchy {
         else {
             cacheRoot = Path.join(this.baseLocation(), 'actions', 'cache', 'abuild');
         }
-        return this.getPath(cacheRoot);
+        if (!FileSystem.existsSync(cacheRoot)) {
+            IO.mkdirP(cacheRoot);
+        }
+        return cacheRoot;
     }
     repository() {
         return this.getPath('repository');

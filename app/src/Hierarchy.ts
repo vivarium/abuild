@@ -64,7 +64,11 @@ export class Hierarchy {
             );
         }
 
-        return this.getPath(cacheRoot);
+        if (!FileSystem.existsSync(cacheRoot)) {
+            IO.mkdirP(cacheRoot);
+        }
+
+        return cacheRoot;
     }
 
     public repository(): string {
