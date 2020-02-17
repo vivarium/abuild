@@ -56,7 +56,11 @@ class Hierarchy {
         return skel;
     }
     cache() {
-        return this.getPath('cache');
+        const cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
+        if (cacheRoot) {
+            return cacheRoot;
+        }
+        return Path.join(this.baseLocation(), 'actions', 'cache', 'abuild');
     }
     repository() {
         return this.getPath('repository');
@@ -67,6 +71,15 @@ class Hierarchy {
             IO.mkdirP(path);
         }
         return path;
+    }
+    baseLocation() {
+        if (Process.platform == 'win32') {
+            return process.env['USERPROFILE'] || 'C:\\';
+        }
+        if (Process.platform == 'darwin') {
+            return '/Users';
+        }
+        return '/home';
     }
 }
 exports.Hierarchy = Hierarchy;

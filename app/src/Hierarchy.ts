@@ -52,7 +52,12 @@ export class Hierarchy {
     }
 
     public cache(): string {
-        return this.getPath('cache');
+        const cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
+        if (cacheRoot) {
+            return cacheRoot;
+        }
+
+        return Path.join(this.baseLocation(), 'actions', 'cache', 'abuild');
     }
 
     public repository(): string {
@@ -66,5 +71,17 @@ export class Hierarchy {
         }
 
         return path;
+    }
+
+    private baseLocation(): string {
+        if (Process.platform == 'win32') {
+            return process.env['USERPROFILE'] || 'C:\\';
+        }
+
+        if (Process.platform == 'darwin') {
+            return '/Users';
+        }
+
+        return '/home';
     }
 }
