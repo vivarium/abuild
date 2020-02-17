@@ -56,11 +56,11 @@ class Hierarchy {
         return skel;
     }
     cache() {
-        const cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
-        if (cacheRoot) {
-            return cacheRoot;
+        let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
+        if (!cacheRoot) {
+            cacheRoot = this.baseLocation();
         }
-        return Path.join(this.baseLocation(), 'actions', 'cache', 'abuild');
+        return Path.join(cacheRoot, 'actions', 'cache', 'abuild');
     }
     repository() {
         return this.getPath('repository');

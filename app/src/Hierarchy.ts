@@ -52,12 +52,12 @@ export class Hierarchy {
     }
 
     public cache(): string {
-        const cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
-        if (cacheRoot) {
-            return cacheRoot;
+        let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
+        if (!cacheRoot) {
+            cacheRoot = this.baseLocation();
         }
 
-        return Path.join(this.baseLocation(), 'actions', 'cache', 'abuild');
+        return Path.join(cacheRoot, 'actions', 'cache', 'abuild');
     }
 
     public repository(): string {
