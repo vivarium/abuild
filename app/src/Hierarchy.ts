@@ -53,11 +53,18 @@ export class Hierarchy {
 
     public cache(): string {
         let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
-        if (!cacheRoot) {
-            cacheRoot = this.baseLocation();
+        if (cacheRoot) {
+            cacheRoot = Path.join(cacheRoot, 'abuild');
+        } else {
+            cacheRoot = Path.join(
+                this.baseLocation(),
+                'actions',
+                'cache',
+                'abuild'
+            );
         }
 
-        return Path.join(cacheRoot, 'actions', 'cache', 'abuild');
+        return this.getPath(cacheRoot);
     }
 
     public repository(): string {
