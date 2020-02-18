@@ -19,7 +19,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Path = __importStar(require("path"));
 const Process = __importStar(require("process"));
 const FileSystem = __importStar(require("fs"));
-const OS = __importStar(require("os"));
 const IO = __importStar(require("@actions/io"));
 class Hierarchy {
     constructor(root, workspace) {
@@ -62,11 +61,11 @@ class Hierarchy {
     }
     cache(version) {
         return __awaiter(this, void 0, void 0, function* () {
-            let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
+            let cacheRoot = Process.env['GITHUB_HOME'];
             if (!cacheRoot) {
-                cacheRoot = Path.join(yield this.baseLocation(), 'actions', 'cache');
+                throw new Error('GITHUB_HOME not exists');
             }
-            cacheRoot = Path.join(cacheRoot, 'abuild', version, OS.arch());
+            cacheRoot = Path.join(cacheRoot, 'abuild', version);
             if (!FileSystem.existsSync(cacheRoot)) {
                 yield IO.mkdirP(cacheRoot);
             }
@@ -85,17 +84,6 @@ class Hierarchy {
                 yield IO.mkdirP(path);
             }
             return path;
-        });
-    }
-    baseLocation() {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (Process.platform == 'win32') {
-                return process.env['USERPROFILE'] || 'C:\\';
-            }
-            if (Process.platform == 'darwin') {
-                return '/Users';
-            }
-            return '/home';
         });
     }
 }

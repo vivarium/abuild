@@ -18,10 +18,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Path = __importStar(require("path"));
 const FileSystem = __importStar(require("fs"));
-const OS = __importStar(require("os"));
 const Exec = __importStar(require("@actions/exec"));
 const Core = __importStar(require("@actions/core"));
-const Cache = __importStar(require("@actions/tool-cache"));
+const IO = __importStar(require("@actions/io"));
 const Container_1 = require("../Container");
 class Cached extends Container_1.Container {
     constructor(container, cachePath, alpine) {
@@ -59,7 +58,17 @@ class Cached extends Container_1.Container {
     destroy() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield this.save();
+                const history = yield this.history();
+                IO.rmRF(this._complete);
+                yield Exec.exec('docker', [
+                    'image',
+                    'save',
+                    `${this.name()}:${this._version}`,
+                    ...history,
+                    '-o',
+                    this._cache
+                ]);
+                FileSystem.writeFileSync(this._complete, '');
             }
             catch (error) {
                 Core.error(error.message);
@@ -88,21 +97,6 @@ class Cached extends Container_1.Container {
                 }
             });
             return history;
-        });
-    }
-    save() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const tmp = Path.join(OS.tmpdir(), this._image);
-            const history = yield this.history();
-            yield Exec.exec('docker', [
-                'image',
-                'save',
-                `${this.name()}:${this._version}`,
-                ...history,
-                '-o',
-                tmp
-            ]);
-            yield Cache.cacheFile(tmp, this._image, 'abuild', this._version);
         });
     }
 }

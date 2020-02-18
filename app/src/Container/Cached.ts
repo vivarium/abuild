@@ -1,10 +1,9 @@
 import * as Path from 'path';
 import * as FileSystem from 'fs';
-import * as OS from 'os';
 
 import * as Exec from '@actions/exec';
 import * as Core from '@actions/core';
-import * as Cache from '@actions/tool-cache';
+import * as IO from '@actions/io';
 
 import { Container } from '../Container';
 
@@ -60,7 +59,20 @@ export class Cached extends Container {
 
     public async destroy(): Promise<void> {
         try {
-            await this.save();
+            const history = await this.history();
+
+            IO.rmRF(this._complete);
+
+            await Exec.exec('docker', [
+                'image',
+                'save',
+                `${this.name()}:${this._version}`,
+                ...history,
+                '-o',
+                this._cache
+            ]);
+
+            FileSystem.writeFileSync(this._complete, '');
         } catch (error) {
             Core.error(error.message);
             Core.error("Container image can't be cached");
@@ -92,21 +104,5 @@ export class Cached extends Container {
         );
 
         return history;
-    }
-
-    private async save(): Promise<void> {
-        const tmp = Path.join(OS.tmpdir(), this._image);
-
-        const history = await this.history();
-        await Exec.exec('docker', [
-            'image',
-            'save',
-            `${this.name()}:${this._version}`,
-            ...history,
-            '-o',
-            tmp
-        ]);
-
-        await Cache.cacheFile(tmp, this._image, 'abuild', this._version);
     }
 }

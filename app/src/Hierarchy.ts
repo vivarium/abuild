@@ -1,7 +1,6 @@
 import * as Path from 'path';
 import * as Process from 'process';
 import * as FileSystem from 'fs';
-import * as OS from 'os';
 
 import * as IO from '@actions/io';
 
@@ -54,16 +53,12 @@ export class Hierarchy {
     }
 
     public async cache(version: string): Promise<string> {
-        let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
+        let cacheRoot = Process.env['GITHUB_HOME'];
         if (!cacheRoot) {
-            cacheRoot = Path.join(
-                await this.baseLocation(),
-                'actions',
-                'cache'
-            );
+            throw new Error('GITHUB_HOME not exists');
         }
 
-        cacheRoot = Path.join(cacheRoot, 'abuild', version, OS.arch());
+        cacheRoot = Path.join(cacheRoot, 'abuild', version);
 
         if (!FileSystem.existsSync(cacheRoot)) {
             await IO.mkdirP(cacheRoot);
@@ -83,17 +78,5 @@ export class Hierarchy {
         }
 
         return path;
-    }
-
-    private async baseLocation(): Promise<string> {
-        if (Process.platform == 'win32') {
-            return process.env['USERPROFILE'] || 'C:\\';
-        }
-
-        if (Process.platform == 'darwin') {
-            return '/Users';
-        }
-
-        return '/home';
     }
 }
