@@ -44,9 +44,6 @@ inputs:
   pubKey:
     description: 'The public key used to verify the packages'
     required: true
-outputs:
-  repository:
-    description: 'The path of the repository'
 runs:
   using: 'node12'
   main: 'app/dist/main.js'
