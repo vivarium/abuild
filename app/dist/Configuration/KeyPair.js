@@ -41,8 +41,8 @@ class KeyPair {
     write(hierarchy) {
         return __awaiter(this, void 0, void 0, function* () {
             yield Promise.all([
-                this._privKey.write(hierarchy.keys()),
-                this._pubKey.write(hierarchy.keys())
+                this._privKey.write(yield hierarchy.keys()),
+                this._pubKey.write(yield hierarchy.keys())
             ]);
         });
     }

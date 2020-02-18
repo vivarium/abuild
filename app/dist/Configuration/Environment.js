@@ -53,13 +53,13 @@ class Environment {
     }
     read(hierarchy) {
         return __awaiter(this, void 0, void 0, function* () {
-            const env = Path.join(hierarchy.skel(), 'env.in');
+            const env = Path.join(yield hierarchy.skel(), 'env.in');
             let data = FileSystem.readFileSync(env, 'utf8');
             data = data.replace('%ALPINE_VERSION%', this._alpine);
             data = data.replace('%UID%', this._user.uid().toString());
             data = data.replace('%GID%', this._user.gid().toString());
             data = data.replace('%KEY_NAME%', this._keyPair.keyName());
-            data = data.replace('%REPOSITORY%', hierarchy.repository());
+            data = data.replace('%REPOSITORY%', yield hierarchy.repository());
             data = data.replace('%WORKSPACE%', hierarchy.workspace());
             data = data.replace('%WORKDIR%', this._workdir);
             return data;
@@ -75,7 +75,7 @@ class Environment {
             Core.info(`KEY_NAME:       ${this._keyPair.keyName()}`);
             Core.info(`REPOSITORY:     ${hierarchy.repository()}`);
             Core.info(`WORKSPACE:      ${hierarchy.workspace()}`);
-            Core.info(`WORKDIR:        ${Path.join(hierarchy.repository(), this._workdir)}`);
+            Core.info(`WORKDIR:        ${Path.join(yield hierarchy.repository(), this._workdir)}`);
             Core.endGroup();
         });
     }

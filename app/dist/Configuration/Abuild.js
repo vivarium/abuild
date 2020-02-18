@@ -38,8 +38,8 @@ class Abuild {
     write(hierarchy) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.log();
-            const data = yield this.read(hierarchy.skel());
-            const abuild = Path.join(hierarchy.data(), 'abuild.conf');
+            const data = yield this.read(yield hierarchy.skel());
+            const abuild = Path.join(yield hierarchy.data(), 'abuild.conf');
             FileSystem.writeFileSync(abuild, data);
         });
     }

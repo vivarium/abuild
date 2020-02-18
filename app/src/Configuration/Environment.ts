@@ -53,7 +53,7 @@ export class Environment {
     }
 
     private async read(hierarchy: Hierarchy): Promise<string> {
-        const env = Path.join(hierarchy.skel(), 'env.in');
+        const env = Path.join(await hierarchy.skel(), 'env.in');
 
         let data = FileSystem.readFileSync(env, 'utf8');
 
@@ -61,7 +61,7 @@ export class Environment {
         data = data.replace('%UID%', this._user.uid().toString());
         data = data.replace('%GID%', this._user.gid().toString());
         data = data.replace('%KEY_NAME%', this._keyPair.keyName());
-        data = data.replace('%REPOSITORY%', hierarchy.repository());
+        data = data.replace('%REPOSITORY%', await hierarchy.repository());
         data = data.replace('%WORKSPACE%', hierarchy.workspace());
         data = data.replace('%WORKDIR%', this._workdir);
 
@@ -81,7 +81,7 @@ export class Environment {
         Core.info(`WORKSPACE:      ${hierarchy.workspace()}`);
         Core.info(
             `WORKDIR:        ${Path.join(
-                hierarchy.repository(),
+                await hierarchy.repository(),
                 this._workdir
             )}`
         );

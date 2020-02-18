@@ -26,8 +26,8 @@ export class Abuild {
 
     public async write(hierarchy: Hierarchy): Promise<void> {
         await this.log();
-        const data = await this.read(hierarchy.skel());
-        const abuild = Path.join(hierarchy.data(), 'abuild.conf');
+        const data = await this.read(await hierarchy.skel());
+        const abuild = Path.join(await hierarchy.data(), 'abuild.conf');
         FileSystem.writeFileSync(abuild, data);
     }
 

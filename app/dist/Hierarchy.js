@@ -43,10 +43,14 @@ class Hierarchy {
         return this._workspace;
     }
     data() {
-        return this.getPath('data');
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.getPath('data');
+        });
     }
     keys() {
-        return this.getPath('data/keys');
+        return __awaiter(this, void 0, void 0, function* () {
+            return this.getPath('data/keys');
+        });
     }
     skel() {
         const skel = Path.join(this.root(), 'skel');
@@ -56,34 +60,42 @@ class Hierarchy {
         return skel;
     }
     cache(version) {
-        let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
-        if (!cacheRoot) {
-            cacheRoot = Path.join(this.baseLocation(), 'actions', 'cache');
-        }
-        cacheRoot = Path.join(cacheRoot, 'abuild', version);
-        if (!FileSystem.existsSync(cacheRoot)) {
-            IO.mkdirP(cacheRoot);
-        }
-        return cacheRoot;
+        return __awaiter(this, void 0, void 0, function* () {
+            let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
+            if (!cacheRoot) {
+                cacheRoot = Path.join(yield this.baseLocation(), 'actions', 'cache');
+            }
+            cacheRoot = Path.join(cacheRoot, 'abuild', version);
+            if (!FileSystem.existsSync(cacheRoot)) {
+                yield IO.mkdirP(cacheRoot);
+            }
+            return cacheRoot;
+        });
     }
     repository() {
-        return this.getPath('repository');
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.getPath('repository');
+        });
     }
     getPath(dir) {
-        const path = Path.join(this.root(), dir);
-        if (!FileSystem.existsSync(path)) {
-            IO.mkdirP(path);
-        }
-        return path;
+        return __awaiter(this, void 0, void 0, function* () {
+            const path = Path.join(this.root(), dir);
+            if (!FileSystem.existsSync(path)) {
+                yield IO.mkdirP(path);
+            }
+            return path;
+        });
     }
     baseLocation() {
-        if (Process.platform == 'win32') {
-            return process.env['USERPROFILE'] || 'C:\\';
-        }
-        if (Process.platform == 'darwin') {
-            return '/Users';
-        }
-        return '/home';
+        return __awaiter(this, void 0, void 0, function* () {
+            if (Process.platform == 'win32') {
+                return process.env['USERPROFILE'] || 'C:\\';
+            }
+            if (Process.platform == 'darwin') {
+                return '/Users';
+            }
+            return '/home';
+        });
     }
 }
 exports.Hierarchy = Hierarchy;

@@ -34,11 +34,11 @@ export class Hierarchy {
         return this._workspace;
     }
 
-    public data(): string {
+    public async data(): Promise<string> {
         return this.getPath('data');
     }
 
-    public keys(): string {
+    public async keys(): Promise<string> {
         return this.getPath('data/keys');
     }
 
@@ -51,35 +51,39 @@ export class Hierarchy {
         return skel;
     }
 
-    public cache(version: string): string {
+    public async cache(version: string): Promise<string> {
         let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
         if (!cacheRoot) {
-            cacheRoot = Path.join(this.baseLocation(), 'actions', 'cache');
+            cacheRoot = Path.join(
+                await this.baseLocation(),
+                'actions',
+                'cache'
+            );
         }
 
         cacheRoot = Path.join(cacheRoot, 'abuild', version);
 
         if (!FileSystem.existsSync(cacheRoot)) {
-            IO.mkdirP(cacheRoot);
+            await IO.mkdirP(cacheRoot);
         }
 
         return cacheRoot;
     }
 
-    public repository(): string {
-        return this.getPath('repository');
+    public async repository(): Promise<string> {
+        return await this.getPath('repository');
     }
 
-    private getPath(dir: string): string {
+    private async getPath(dir: string): Promise<string> {
         const path = Path.join(this.root(), dir);
         if (!FileSystem.existsSync(path)) {
-            IO.mkdirP(path);
+            await IO.mkdirP(path);
         }
 
         return path;
     }
 
-    private baseLocation(): string {
+    private async baseLocation(): Promise<string> {
         if (Process.platform == 'win32') {
             return process.env['USERPROFILE'] || 'C:\\';
         }

@@ -23,12 +23,11 @@ const Core = __importStar(require("@actions/core"));
 const IO = __importStar(require("@actions/io"));
 const Container_1 = require("../Container");
 class Cached extends Container_1.Container {
-    constructor(container, hierarchy, alpine) {
+    constructor(container, cachePath, alpine) {
         super(container.name());
         this._container = container;
         this._version = alpine;
         this._image = `${this._version}.tar`;
-        const cachePath = hierarchy.cache(this._version);
         this._cache = Path.join(cachePath, this._image);
         this._complete = Path.join(cachePath, '.complete');
     }

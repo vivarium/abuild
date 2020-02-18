@@ -30,8 +30,9 @@ async function github(
 ): Promise<Container> {
     const conf = await Configuration.fromAction();
     const env = await conf.write(hierarchy);
+    const cachePath = await hierarchy.cache(env.alpine());
 
-    return new Cached(container, hierarchy, env.alpine());
+    return new Cached(container, cachePath, env.alpine());
 }
 
 async function configure(container: Container): Promise<Container> {

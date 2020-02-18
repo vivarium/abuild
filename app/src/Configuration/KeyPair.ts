@@ -38,8 +38,8 @@ export class KeyPair {
 
     public async write(hierarchy: Hierarchy): Promise<void> {
         await Promise.all([
-            this._privKey.write(hierarchy.keys()),
-            this._pubKey.write(hierarchy.keys())
+            this._privKey.write(await hierarchy.keys()),
+            this._pubKey.write(await hierarchy.keys())
         ]);
     }
 

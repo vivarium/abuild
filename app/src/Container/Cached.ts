@@ -6,7 +6,6 @@ import * as Core from '@actions/core';
 import * as IO from '@actions/io';
 
 import { Container } from '../Container';
-import { Hierarchy } from '../Hierarchy';
 
 export class Cached extends Container {
     private _container: Container;
@@ -21,7 +20,7 @@ export class Cached extends Container {
 
     public constructor(
         container: Container,
-        hierarchy: Hierarchy,
+        cachePath: string,
         alpine: string
     ) {
         super(container.name());
@@ -30,8 +29,6 @@ export class Cached extends Container {
         this._version = alpine;
 
         this._image = `${this._version}.tar`;
-
-        const cachePath = hierarchy.cache(this._version);
         this._cache = Path.join(cachePath, this._image);
         this._complete = Path.join(cachePath, '.complete');
     }

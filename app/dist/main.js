@@ -35,7 +35,8 @@ function github(hierarchy, container) {
     return __awaiter(this, void 0, void 0, function* () {
         const conf = yield Configuration_1.Configuration.fromAction();
         const env = yield conf.write(hierarchy);
-        return new Cached_1.Cached(container, hierarchy, env.alpine());
+        const cachePath = yield hierarchy.cache(env.alpine());
+        return new Cached_1.Cached(container, cachePath, env.alpine());
     });
 }
 function configure(container) {
