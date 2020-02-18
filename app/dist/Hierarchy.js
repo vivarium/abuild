@@ -61,9 +61,9 @@ class Hierarchy {
     }
     cache(version) {
         return __awaiter(this, void 0, void 0, function* () {
-            let cacheRoot = Process.env['GITHUB_HOME'];
+            let cacheRoot = Process.env['HOME'];
             if (!cacheRoot) {
-                throw new Error('GITHUB_HOME not exists');
+                throw new Error('HOME not exists');
             }
             cacheRoot = Path.join(cacheRoot, 'abuild', version);
             if (!FileSystem.existsSync(cacheRoot)) {
