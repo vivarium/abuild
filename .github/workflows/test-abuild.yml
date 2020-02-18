@@ -15,6 +15,12 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2
 
+      - name: Cache Abuild
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.GITHUB_HOME }}/abuild/${{ matrix.alpine }}
+          key: ${{ matrix.alpine }}
+
       - name: Building test
         id: abuild
         uses: ./
