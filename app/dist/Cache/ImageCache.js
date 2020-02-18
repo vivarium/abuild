@@ -45,7 +45,7 @@ class ImageCache {
                     return '';
                 }
                 const archivePath = Path.join(this._cachePath, `${version}.tar`);
-                Core.debug(`Archive Path: ${archivePath}`);
+                Core.info(`Archive Path: ${archivePath}`);
                 Utils.setCacheState(cacheEntry);
                 yield CacheHttpClient.downloadCache(cacheEntry.archiveLocation, archivePath);
                 const archiveFileSize = Utils.getArchiveFileSize(archivePath);

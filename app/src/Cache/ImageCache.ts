@@ -45,7 +45,7 @@ export class ImageCache {
 
             const archivePath = Path.join(this._cachePath, `${version}.tar`);
 
-            Core.debug(`Archive Path: ${archivePath}`);
+            Core.info(`Archive Path: ${archivePath}`);
 
             // Store the cache result
             Utils.setCacheState(cacheEntry);
