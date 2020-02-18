@@ -20,31 +20,19 @@ const Path = __importStar(require("path"));
 const FileSystem = __importStar(require("fs"));
 const Exec = __importStar(require("@actions/exec"));
 const Core = __importStar(require("@actions/core"));
-const IO = __importStar(require("@actions/io"));
 const Container_1 = require("../Container");
 class Cached extends Container_1.Container {
     constructor(container, cachePath, alpine) {
         super(container.name());
-        this._cache = '';
-        this._complete = '';
         this._container = container;
         this._version = alpine;
-        this._skip = false;
         this._image = `${this._version}.tar`;
-        try {
-            this._cache = Path.join(cachePath, this._image);
-            this._complete = `${cachePath}.complete`;
-        }
-        catch (error) {
-            this._skip = true;
-        }
+        this._cache = Path.join(cachePath, this._image);
     }
     build() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!this._skip &&
-                    FileSystem.existsSync(this._complete) &&
-                    FileSystem.existsSync(this._cache)) {
+                if (FileSystem.existsSync(this._cache)) {
                     Core.info(`Cache hit! Found ${this.name()} version ${this._version}`);
                     yield Exec.exec('docker', ['image', 'load', '-i', this._cache]);
                 }
@@ -67,9 +55,15 @@ class Cached extends Container_1.Container {
     destroy() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!this._skip) {
-                    yield this.save();
-                }
+                const history = yield this.history();
+                yield Exec.exec('docker', [
+                    'image',
+                    'save',
+                    `${this.name()}:${this._version}`,
+                    ...history,
+                    '-o',
+                    this._cache
+                ]);
             }
             catch (error) {
                 Core.error(error.message);
@@ -98,21 +92,6 @@ class Cached extends Container_1.Container {
                 }
             });
             return history;
-        });
-    }
-    save() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const history = yield this.history();
-            IO.rmRF(this._complete);
-            yield Exec.exec('docker', [
-                'image',
-                'save',
-                `${this.name()}:${this._version}`,
-                ...history,
-                '-o',
-                this._cache
-            ]);
-            FileSystem.writeFileSync(this._complete, '');
         });
     }
 }

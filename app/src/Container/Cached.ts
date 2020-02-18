@@ -3,7 +3,6 @@ import * as FileSystem from 'fs';
 
 import * as Exec from '@actions/exec';
 import * as Core from '@actions/core';
-import * as IO from '@actions/io';
 
 import { Container } from '../Container';
 
@@ -15,10 +14,6 @@ export class Cached extends Container {
     private _image: string;
 
     private _cache: string;
-
-    private _complete: string;
-
-    private _skip: boolean;
 
     public constructor(
         container: Container,
@@ -32,15 +27,11 @@ export class Cached extends Container {
 
         this._image = `${this._version}.tar`;
         this._cache = Path.join(cachePath, this._image);
-        this._complete = `${cachePath}.complete`;
     }
 
     public async build(): Promise<void> {
         try {
-            if (
-                FileSystem.existsSync(this._complete) &&
-                FileSystem.existsSync(this._cache)
-            ) {
+            if (FileSystem.existsSync(this._cache)) {
                 Core.info(
                     `Cache hit! Found ${this.name()} version ${this._version}`
                 );
@@ -63,8 +54,6 @@ export class Cached extends Container {
         try {
             const history = await this.history();
 
-            IO.rmRF(this._complete);
-
             await Exec.exec('docker', [
                 'image',
                 'save',
@@ -73,8 +62,6 @@ export class Cached extends Container {
                 '-o',
                 this._cache
             ]);
-
-            FileSystem.writeFileSync(this._complete, '');
         } catch (error) {
             Core.error(error.message);
             Core.error("Container image can't be cached");
