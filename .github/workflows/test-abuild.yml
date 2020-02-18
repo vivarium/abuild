@@ -12,8 +12,18 @@ jobs:
         alpine: ["3.8", "3.9", "3.10", "3.11", "edge"]
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: ./
+      - name: Source checkout
+        uses: actions/checkout@v2
+
+      - name: Cache docker
+        uses: actions/cache@v1
+        with:
+          path: /opt/hostedtoolcache/abuild/${{ matrix.alpine }}
+          key: ${{ matrix.alpine }}
+
+      - name: Building test
+        id: abuild
+        uses: ./
         with:
           packager: Luca Cantoreggi <luca@cantoreggi.xyz>
           keyName: dummy-key.rsa
@@ -21,3 +31,9 @@ jobs:
           pubKey: ${{ secrets.dummy_pub_key }}
           alpine: ${{ matrix.alpine }}
           workdir: test
+
+      - name: Upload repository
+        uses: actions/upload-artifact@v1
+        with:
+          name: repository-${{ matrix.alpine }}
+          path: /repository/${{ matrix.alpine }}/main/x86_64
