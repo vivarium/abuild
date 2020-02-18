@@ -30,7 +30,7 @@ export class Cached extends Container {
 
         this._image = `${this._version}.tar`;
         this._cache = Path.join(cachePath, this._image);
-        this._complete = Path.join(cachePath, '.complete');
+        this._complete = `${cachePath}.complete`;
     }
 
     public async build(): Promise<void> {

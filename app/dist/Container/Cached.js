@@ -29,7 +29,7 @@ class Cached extends Container_1.Container {
         this._version = alpine;
         this._image = `${this._version}.tar`;
         this._cache = Path.join(cachePath, this._image);
-        this._complete = Path.join(cachePath, '.complete');
+        this._complete = `${cachePath}.complete`;
     }
     build() {
         return __awaiter(this, void 0, void 0, function* () {

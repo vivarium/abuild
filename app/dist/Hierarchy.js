@@ -19,6 +19,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Path = __importStar(require("path"));
 const Process = __importStar(require("process"));
 const FileSystem = __importStar(require("fs"));
+const OS = __importStar(require("os"));
 const IO = __importStar(require("@actions/io"));
 class Hierarchy {
     constructor(root, workspace) {
@@ -65,7 +66,7 @@ class Hierarchy {
             if (!cacheRoot) {
                 cacheRoot = Path.join(yield this.baseLocation(), 'actions', 'cache');
             }
-            cacheRoot = Path.join(cacheRoot, 'abuild', version);
+            cacheRoot = Path.join(cacheRoot, 'abuild', version, OS.arch());
             if (!FileSystem.existsSync(cacheRoot)) {
                 yield IO.mkdirP(cacheRoot);
             }
