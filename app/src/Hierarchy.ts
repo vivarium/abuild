@@ -53,9 +53,9 @@ export class Hierarchy {
     }
 
     public async cache(version: string): Promise<string> {
-        let cacheRoot = Process.env['GITHUB_HOME'];
+        let cacheRoot = Process.env['HOME'];
         if (!cacheRoot) {
-            throw new Error('GITHUB_HOME not exists');
+            throw new Error('HOME not exists');
         }
 
         cacheRoot = Path.join(cacheRoot, 'abuild', version);
