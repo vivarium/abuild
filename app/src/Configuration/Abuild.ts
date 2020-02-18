@@ -28,11 +28,7 @@ export class Abuild {
         await this.log();
         const data = await this.read(hierarchy.skel());
         const abuild = Path.join(hierarchy.data(), 'abuild.conf');
-        FileSystem.writeFile(abuild, data, error => {
-            if (error) {
-                throw new Error(error.message);
-            }
-        });
+        FileSystem.writeFileSync(abuild, data);
     }
 
     private async read(skelPath: string): Promise<string> {

@@ -25,10 +25,6 @@ export class Key {
 
         Core.info(`Writing key ${this._name} to ${destPath}`);
 
-        FileSystem.writeFile(file, this._content, error => {
-            if (error) {
-                throw error;
-            }
-        });
+        FileSystem.writeFileSync(file, this._content);
     }
 }

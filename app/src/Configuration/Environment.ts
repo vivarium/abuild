@@ -43,11 +43,7 @@ export class Environment {
 
         const env = Path.join(hierarchy.root(), '.env');
 
-        FileSystem.writeFile(env, data, error => {
-            if (error) {
-                throw error;
-            }
-        });
+        FileSystem.writeFileSync(env, data);
 
         await this._keyPair.write(hierarchy);
     }

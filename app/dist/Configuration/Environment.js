@@ -44,11 +44,7 @@ class Environment {
             yield this.log(hierarchy);
             const data = yield this.read(hierarchy);
             const env = Path.join(hierarchy.root(), '.env');
-            FileSystem.writeFile(env, data, error => {
-                if (error) {
-                    throw error;
-                }
-            });
+            FileSystem.writeFileSync(env, data);
             yield this._keyPair.write(hierarchy);
         });
     }

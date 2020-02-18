@@ -40,11 +40,7 @@ class Abuild {
             yield this.log();
             const data = yield this.read(hierarchy.skel());
             const abuild = Path.join(hierarchy.data(), 'abuild.conf');
-            FileSystem.writeFile(abuild, data, error => {
-                if (error) {
-                    throw new Error(error.message);
-                }
-            });
+            FileSystem.writeFileSync(abuild, data);
         });
     }
     read(skelPath) {
