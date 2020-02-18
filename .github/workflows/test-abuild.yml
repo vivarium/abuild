@@ -15,12 +15,6 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2
 
-      - name: Cache docker
-        uses: actions/cache@v1
-        with:
-          path: /opt/hostedtoolcache/abuild/${{ matrix.alpine }}
-          key: ${{ matrix.alpine }}
-
       - name: Building test
         id: abuild
         uses: ./
