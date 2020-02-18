@@ -18,7 +18,7 @@ jobs:
       - name: Cache Abuild
         uses: actions/cache@v1
         with:
-          path: ${{ env.HOME }}/abuild/${{ matrix.alpine }}
+          path: ${{ env.home }}/abuild/${{ matrix.alpine }}
           key: ${{ matrix.alpine }}
 
       - name: Building test
