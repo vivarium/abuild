@@ -1,7 +1,9 @@
 import * as Process from 'process';
 import * as Core from '@actions/core';
-import * as Command from '@actions/core/lib/command';
 import * as Path from 'path';
+
+import * as Command from '@actions/core/lib/command';
+import * as Cache from '@actions/tool-cache';
 
 import { Container } from './Container';
 import { Configuration } from './Configuration';
@@ -65,6 +67,19 @@ async function run(): Promise<void> {
     } finally {
         container.destroy();
     }
+
+    const path = Cache.find('package', '1.0.0');
+
+    if (path.length > 0) {
+        Core.info('Cache hit!');
+    }
+
+    await Cache.cacheFile(
+        Path.join(__dirname, '..', 'package.json'),
+        'package.json',
+        'package',
+        '1.0.0'
+    );
 }
 
 run();

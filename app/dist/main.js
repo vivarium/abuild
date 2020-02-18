@@ -18,8 +18,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Process = __importStar(require("process"));
 const Core = __importStar(require("@actions/core"));
-const Command = __importStar(require("@actions/core/lib/command"));
 const Path = __importStar(require("path"));
+const Command = __importStar(require("@actions/core/lib/command"));
+const Cache = __importStar(require("@actions/tool-cache"));
 const Configuration_1 = require("./Configuration");
 const Cached_1 = require("./Container/Cached");
 const Docker_1 = require("./Container/Docker");
@@ -67,6 +68,11 @@ function run() {
         finally {
             container.destroy();
         }
+        const path = Cache.find('package', '1.0.0');
+        if (path.length > 0) {
+            Core.info('Cache hit!');
+        }
+        yield Cache.cacheFile(Path.join(__dirname, '..', 'package.json'), 'package.json', 'package', '1.0.0');
     });
 }
 run();
