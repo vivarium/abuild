@@ -24,10 +24,4 @@ jobs:
           privKey: ${{ secrets.dummy_priv_key }}
           pubKey: ${{ secrets.dummy_pub_key }}
           alpine: ${{ matrix.alpine }}
-          workdir: test
           
-      - name: Upload repository
-        uses: actions/upload-artifact@v1
-        with:
-          name: repository-${{ matrix.alpine }}
-          path: repository/${{ matrix.alpine }}/main/x86_64
