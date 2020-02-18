@@ -1,9 +1,10 @@
 import * as Path from 'path';
 import * as FileSystem from 'fs';
+import * as OS from 'os';
 
 import * as Exec from '@actions/exec';
 import * as Core from '@actions/core';
-import * as IO from '@actions/io';
+import * as Cache from '@actions/tool-cache';
 
 import { Container } from '../Container';
 
@@ -34,17 +35,22 @@ export class Cached extends Container {
     }
 
     public async build(): Promise<void> {
-        if (
-            FileSystem.existsSync(this._complete) &&
-            FileSystem.existsSync(this._cache)
-        ) {
-            Core.info(
-                `Cache hit! Found ${this.name()} version ${this._version}`
-            );
-            await Exec.exec('docker', ['image', 'load', '-i', this._cache]);
+        try {
+            if (
+                FileSystem.existsSync(this._complete) &&
+                FileSystem.existsSync(this._cache)
+            ) {
+                Core.info(
+                    `Cache hit! Found ${this.name()} version ${this._version}`
+                );
+                await Exec.exec('docker', ['image', 'load', '-i', this._cache]);
+            }
+        } catch (error) {
+            Core.error(error.message);
+            Core.error('Cannot load cache');
+        } finally {
+            await this._container.build();
         }
-
-        await this._container.build();
     }
 
     public async start(): Promise<void> {
@@ -54,21 +60,7 @@ export class Cached extends Container {
 
     public async destroy(): Promise<void> {
         try {
-            IO.rmRF(this._complete);
-
-            const history = await this.history();
-            await Exec.exec('docker', [
-                'image',
-                'save',
-                `${this.name()}:${this._version}`,
-                ...history,
-                '-o',
-                this._cache
-            ]);
-
-            FileSystem.writeFileSync(this._complete, '');
-
-            Core.info(`Abuild image cached to ${this._cache}`);
+            await this.save();
         } catch (error) {
             Core.error(error.message);
             Core.error("Container image can't be cached");
@@ -100,5 +92,21 @@ export class Cached extends Container {
         );
 
         return history;
+    }
+
+    private async save(): Promise<void> {
+        const tmp = Path.join(OS.tmpdir(), this._image);
+
+        const history = await this.history();
+        await Exec.exec('docker', [
+            'image',
+            'save',
+            `${this.name()}:${this._version}`,
+            ...history,
+            '-o',
+            tmp
+        ]);
+
+        await Cache.cacheFile(tmp, this._image, 'abuild', this._version);
     }
 }
