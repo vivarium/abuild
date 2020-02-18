@@ -4,9 +4,9 @@
 
 alpine=$ALPINE_VERSION
 
-if [ ! $alpine == 'edge' ]; then
-    alpine='v'$alpine
-fi
+#if [ ! $alpine == 'edge' ]; then
+#    alpine='v'$alpine
+#fi
 
 export REPODEST="/repository/${alpine}"
 
