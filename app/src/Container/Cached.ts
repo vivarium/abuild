@@ -1,41 +1,40 @@
 import * as Path from 'path';
-import * as FileSystem from 'fs';
+import * as OS from 'os';
 
 import * as Exec from '@actions/exec';
 import * as Core from '@actions/core';
 
 import { Container } from '../Container';
+import { ImageCache } from '../Cache/ImageCache';
 
 export class Cached extends Container {
     private _container: Container;
 
+    private _cache: ImageCache;
+
     private _version: string;
-
-    private _image: string;
-
-    private _cache: string;
 
     public constructor(
         container: Container,
-        cachePath: string,
+        cache: ImageCache,
         alpine: string
     ) {
         super(container.name());
 
         this._container = container;
+        this._cache = cache;
         this._version = alpine;
-
-        this._image = `${this._version}.tar`;
-        this._cache = Path.join(cachePath, this._image);
     }
 
     public async build(): Promise<void> {
         try {
-            if (FileSystem.existsSync(this._cache)) {
+            const cache = await this._cache.restore(this._version);
+
+            if (cache.length > 0) {
                 Core.info(
                     `Cache hit! Found ${this.name()} version ${this._version}`
                 );
-                await Exec.exec('docker', ['image', 'load', '-i', this._cache]);
+                await Exec.exec('docker', ['image', 'load', '-i', cache]);
             }
         } catch (error) {
             Core.error(error.message);
@@ -53,6 +52,7 @@ export class Cached extends Container {
     public async destroy(): Promise<void> {
         try {
             const history = await this.history();
+            const tmp = Path.join(OS.tmpdir(), `${this._version}.tar`);
 
             await Exec.exec('docker', [
                 'image',
@@ -60,8 +60,10 @@ export class Cached extends Container {
                 `${this.name()}:${this._version}`,
                 ...history,
                 '-o',
-                this._cache
+                tmp
             ]);
+
+            await this._cache.save(tmp, this._version);
         } catch (error) {
             Core.error(error.message);
             Core.error("Container image can't be cached");

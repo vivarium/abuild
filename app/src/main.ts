@@ -9,6 +9,7 @@ import { Configuration } from './Configuration';
 import { Cached } from './Container/Cached';
 import { Docker } from './Container/Docker';
 import { Hierarchy } from './Hierarchy';
+import { ImageCache } from './Cache/ImageCache';
 
 async function matchers(): Promise<void> {
     const problem = Path.join(__dirname, '..', 'problem');
@@ -34,8 +35,9 @@ async function github(
 
     try {
         const cachePath = await hierarchy.cache(env.alpine());
+        const cache = new ImageCache(cachePath);
 
-        return new Cached(container, cachePath, env.alpine());
+        return new Cached(container, cache, env.alpine());
     } catch (error) {
         Core.warning('Skipping cache');
     }

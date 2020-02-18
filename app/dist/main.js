@@ -24,6 +24,7 @@ const Configuration_1 = require("./Configuration");
 const Cached_1 = require("./Container/Cached");
 const Docker_1 = require("./Container/Docker");
 const Hierarchy_1 = require("./Hierarchy");
+const ImageCache_1 = require("./Cache/ImageCache");
 function matchers() {
     return __awaiter(this, void 0, void 0, function* () {
         const problem = Path.join(__dirname, '..', 'problem');
@@ -37,7 +38,8 @@ function github(hierarchy, container) {
         const env = yield conf.write(hierarchy);
         try {
             const cachePath = yield hierarchy.cache(env.alpine());
-            return new Cached_1.Cached(container, cachePath, env.alpine());
+            const cache = new ImageCache_1.ImageCache(cachePath);
+            return new Cached_1.Cached(container, cache, env.alpine());
         }
         catch (error) {
             Core.warning('Skipping cache');

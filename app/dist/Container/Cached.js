@@ -17,24 +17,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Path = __importStar(require("path"));
-const FileSystem = __importStar(require("fs"));
+const OS = __importStar(require("os"));
 const Exec = __importStar(require("@actions/exec"));
 const Core = __importStar(require("@actions/core"));
 const Container_1 = require("../Container");
 class Cached extends Container_1.Container {
-    constructor(container, cachePath, alpine) {
+    constructor(container, cache, alpine) {
         super(container.name());
         this._container = container;
+        this._cache = cache;
         this._version = alpine;
-        this._image = `${this._version}.tar`;
-        this._cache = Path.join(cachePath, this._image);
     }
     build() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (FileSystem.existsSync(this._cache)) {
+                const cache = yield this._cache.restore(this._version);
+                if (cache.length > 0) {
                     Core.info(`Cache hit! Found ${this.name()} version ${this._version}`);
-                    yield Exec.exec('docker', ['image', 'load', '-i', this._cache]);
+                    yield Exec.exec('docker', ['image', 'load', '-i', cache]);
                 }
             }
             catch (error) {
@@ -56,14 +56,16 @@ class Cached extends Container_1.Container {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const history = yield this.history();
+                const tmp = Path.join(OS.tmpdir(), `${this._version}.tar`);
                 yield Exec.exec('docker', [
                     'image',
                     'save',
                     `${this.name()}:${this._version}`,
                     ...history,
                     '-o',
-                    this._cache
+                    tmp
                 ]);
+                yield this._cache.save(tmp, this._version);
             }
             catch (error) {
                 Core.error(error.message);
