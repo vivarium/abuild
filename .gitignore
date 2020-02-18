@@ -2,5 +2,5 @@
 data/
 cache/
 repository/
-package-lock.json
+app/package-lock.json
 app/dist/**/*.map
