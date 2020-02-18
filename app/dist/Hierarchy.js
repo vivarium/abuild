@@ -61,9 +61,9 @@ class Hierarchy {
     }
     cache(version) {
         return __awaiter(this, void 0, void 0, function* () {
-            let cacheRoot = Process.env['HOME'];
+            let cacheRoot = Process.env['RUNNER_TOOL_CACHE'];
             if (!cacheRoot) {
-                throw new Error('HOME not exists');
+                throw new Error('RUNNER_TOOL_CACHE not exists');
             }
             cacheRoot = Path.join(cacheRoot, 'abuild', version);
             if (!FileSystem.existsSync(cacheRoot)) {

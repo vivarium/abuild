@@ -31,9 +31,16 @@ async function github(
 ): Promise<Container> {
     const conf = await Configuration.fromAction();
     const env = await conf.write(hierarchy);
-    const cachePath = await hierarchy.cache(env.alpine());
 
-    return new Cached(container, cachePath, env.alpine());
+    try {
+        const cachePath = await hierarchy.cache(env.alpine());
+
+        return new Cached(container, cachePath, env.alpine());
+    } catch (error) {
+        Core.warning('Skipping cache');
+    }
+
+    return container;
 }
 
 async function configure(container: Container): Promise<Container> {

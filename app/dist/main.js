@@ -35,8 +35,14 @@ function github(hierarchy, container) {
     return __awaiter(this, void 0, void 0, function* () {
         const conf = yield Configuration_1.Configuration.fromAction();
         const env = yield conf.write(hierarchy);
-        const cachePath = yield hierarchy.cache(env.alpine());
-        return new Cached_1.Cached(container, cachePath, env.alpine());
+        try {
+            const cachePath = yield hierarchy.cache(env.alpine());
+            return new Cached_1.Cached(container, cachePath, env.alpine());
+        }
+        catch (error) {
+            Core.warning('Skipping cache');
+        }
+        return container;
     });
 }
 function configure(container) {

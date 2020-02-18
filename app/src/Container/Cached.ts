@@ -18,6 +18,8 @@ export class Cached extends Container {
 
     private _complete: string;
 
+    private _skip: boolean;
+
     public constructor(
         container: Container,
         cachePath: string,
