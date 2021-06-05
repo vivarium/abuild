@@ -1,4 +1,23 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,14 +27,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.saveCache = exports.reserveCache = exports.downloadCache = exports.getCacheEntry = void 0;
 const core = __importStar(require("@actions/core"));
 const fs = __importStar(require("fs"));
 const auth_1 = require("@actions/http-client/auth");
@@ -66,7 +79,6 @@ function createHttpClient() {
     return new http_client_1.HttpClient('actions/cache', [bearerCredentialHandler], getRequestOptions());
 }
 function getCacheEntry(keys) {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         const httpClient = createHttpClient();
         const resource = `cache?keys=${encodeURIComponent(keys.join(','))}`;
@@ -78,7 +90,7 @@ function getCacheEntry(keys) {
             throw new Error(`Cache service responded with ${response.statusCode}`);
         }
         const cacheResult = response.result;
-        const cacheDownloadUrl = (_a = cacheResult) === null || _a === void 0 ? void 0 : _a.archiveLocation;
+        const cacheDownloadUrl = cacheResult === null || cacheResult === void 0 ? void 0 : cacheResult.archiveLocation;
         if (!cacheDownloadUrl) {
             throw new Error('Cache not found.');
         }
@@ -108,14 +120,14 @@ function downloadCache(archiveLocation, archivePath) {
 }
 exports.downloadCache = downloadCache;
 function reserveCache(key) {
-    var _a, _b, _c;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         const httpClient = createHttpClient();
         const reserveCacheRequest = {
             key
         };
         const response = yield httpClient.postJson(getCacheApiUrl('caches'), reserveCacheRequest);
-        return _c = (_b = (_a = response) === null || _a === void 0 ? void 0 : _a.result) === null || _b === void 0 ? void 0 : _b.cacheId, (_c !== null && _c !== void 0 ? _c : -1);
+        return (_b = (_a = response === null || response === void 0 ? void 0 : response.result) === null || _a === void 0 ? void 0 : _a.cacheId) !== null && _b !== void 0 ? _b : -1;
     });
 }
 exports.reserveCache = reserveCache;
@@ -161,8 +173,8 @@ function uploadFile(httpClient, cacheId, archivePath) {
         const fileSize = fs.statSync(archivePath).size;
         const resourceUrl = getCacheApiUrl(`caches/${cacheId.toString()}`);
         const fd = fs.openSync(archivePath, 'r');
-        const concurrency = (_a = parseEnvNumber('CACHE_UPLOAD_CONCURRENCY'), (_a !== null && _a !== void 0 ? _a : 4));
-        const MAX_CHUNK_SIZE = (_b = parseEnvNumber('CACHE_UPLOAD_CHUNK_SIZE'), (_b !== null && _b !== void 0 ? _b : 32 * 1024 * 1024));
+        const concurrency = (_a = parseEnvNumber('CACHE_UPLOAD_CONCURRENCY')) !== null && _a !== void 0 ? _a : 4;
+        const MAX_CHUNK_SIZE = (_b = parseEnvNumber('CACHE_UPLOAD_CHUNK_SIZE')) !== null && _b !== void 0 ? _b : 32 * 1024 * 1024;
         core.debug(`Concurrency: ${concurrency} and Chunk Size: ${MAX_CHUNK_SIZE}`);
         const parallelUploads = [...new Array(concurrency).keys()];
         core.debug('Awaiting all uploads');
