@@ -1,5 +1,5 @@
 # Contributor: Luca Cantoreggi
-# Maintainer: Luca Cantoreggi <luca@cantoreggi.xyz>
+# Maintainer: Luca Cantoreggi <luca@cn7r66.com>
 pkgname="add"
 pkgver="1.0.0"
 pkgrel=0
@@ -19,7 +19,7 @@ source="${pkgname}-${pkgver}.tar.xz"
 builddir="$srcdir/$pkgname-$pkgver"
 
 build() {
-
+	
 	cd "$builddir"
 
     cmake -DCMAKE_INSTALL_PREFIX=/usr .
@@ -30,14 +30,14 @@ build() {
 check() {
 
 	cd "$builddir"
-
+	
 	make test
 }
 
 package() {
-	
-	cd "$builddir"
 
+	cd "$builddir"
+	
 	make DESTDIR="$pkgdir/" install
 }
 
