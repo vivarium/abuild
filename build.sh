@@ -24,6 +24,5 @@ fi
 
 for package in $(cat alpine.json | jq -r '.[]'); do
     cd "${workspace}/${package}"
-    abuild checksum
     abuild -r
 done
