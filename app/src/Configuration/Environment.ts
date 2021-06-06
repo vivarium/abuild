@@ -80,10 +80,7 @@ export class Environment {
         Core.info(`REPOSITORY:     ${await hierarchy.repository()}`);
         Core.info(`WORKSPACE:      ${hierarchy.workspace()}`);
         Core.info(
-            `WORKDIR:        ${Path.join(
-                await hierarchy.repository(),
-                this._workdir
-            )}`
+            `WORKDIR:        ${Path.join(hierarchy.workspace(), this._workdir)}`
         );
 
         Core.endGroup();

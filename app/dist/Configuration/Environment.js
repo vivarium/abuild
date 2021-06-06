@@ -88,7 +88,7 @@ class Environment {
             Core.info(`KEY_NAME:       ${this._keyPair.keyName()}`);
             Core.info(`REPOSITORY:     ${yield hierarchy.repository()}`);
             Core.info(`WORKSPACE:      ${hierarchy.workspace()}`);
-            Core.info(`WORKDIR:        ${Path.join(yield hierarchy.repository(), this._workdir)}`);
+            Core.info(`WORKDIR:        ${Path.join(hierarchy.workspace(), this._workdir)}`);
             Core.endGroup();
         });
     }
