@@ -59,12 +59,11 @@ function github(hierarchy, container) {
         return container;
     });
 }
-function configure(container) {
+function configure(container, hierarchy) {
     return __awaiter(this, void 0, void 0, function* () {
         if (Process.argv.length > 3) {
             Core.warning('This program needs exactly one argument to start, ignoring others.');
         }
-        const hierarchy = yield Hierarchy_1.Hierarchy.fromAction();
         const arg = Process.argv.length == 3 ? Process.argv[2] : '-g';
         Core.debug(arg);
         switch (arg) {
@@ -75,10 +74,11 @@ function configure(container) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        let container = new Docker_1.Docker('abuild');
+        const hierarchy = yield Hierarchy_1.Hierarchy.fromAction();
+        let container = new Docker_1.Docker('abuild', hierarchy);
         try {
             yield matchers();
-            container = yield configure(container);
+            container = yield configure(container, hierarchy);
             yield container.start();
         }
         catch (error) {

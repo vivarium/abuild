@@ -45,14 +45,15 @@ async function github(
     return container;
 }
 
-async function configure(container: Container): Promise<Container> {
+async function configure(
+    container: Container,
+    hierarchy: Hierarchy
+): Promise<Container> {
     if (Process.argv.length > 3) {
         Core.warning(
             'This program needs exactly one argument to start, ignoring others.'
         );
     }
-
-    const hierarchy = await Hierarchy.fromAction();
 
     const arg = Process.argv.length == 3 ? Process.argv[2] : '-g';
 
@@ -64,11 +65,12 @@ async function configure(container: Container): Promise<Container> {
 }
 
 async function run(): Promise<void> {
-    let container: Container = new Docker('abuild');
+    const hierarchy = await Hierarchy.fromAction();
+    let container: Container = new Docker('abuild', hierarchy);
 
     try {
         await matchers();
-        container = await configure(container);
+        container = await configure(container, hierarchy);
         await container.start();
     } catch (error) {
         Core.setFailed(error.message);

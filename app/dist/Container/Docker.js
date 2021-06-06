@@ -30,16 +30,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Docker = void 0;
 const Exec = __importStar(require("@actions/exec"));
+const Core = __importStar(require("@actions/core"));
 const Container_1 = require("../Container");
 class Docker extends Container_1.Container {
-    constructor(name) {
+    constructor(name, hierarchy) {
         super(name);
         this._isBuilt = false;
+        this._hierarchy = hierarchy;
     }
     build() {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this._isBuilt) {
-                yield Exec.exec('docker-compose', ['build', this.name()]);
+                Core.debug(this._hierarchy.root());
+                yield Exec.exec('docker-compose', ['build', this.name()], {
+                    cwd: this._hierarchy.root()
+                });
                 this._isBuilt = true;
             }
         });
@@ -47,13 +52,17 @@ class Docker extends Container_1.Container {
     start() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.build();
-            yield Exec.exec('docker-compose', ['up']);
+            yield Exec.exec('docker-compose', ['up'], {
+                cwd: this._hierarchy.root()
+            });
         });
     }
     destroy() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this._isBuilt) {
-                yield Exec.exec('docker-compose', ['down']);
+                yield Exec.exec('docker-compose', ['down'], {
+                    cwd: this._hierarchy.root()
+                });
             }
         });
     }
